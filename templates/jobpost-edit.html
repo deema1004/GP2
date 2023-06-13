@@ -1,0 +1,56 @@
+
+
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+<!-- Main Section -->
+<main class="formPage my-xl">
+  <div class="content-box">
+    <div class="formWrapper">
+      <a style="font-size: 21px;" class="backButton" href="{% url 'myjobs' %}"><<i class="im im-angle-left"></i></a>
+      <br>
+
+      <form class="form" method="POST" enctype="multipart/form-data" class="form auth__form " id="jobedit_form">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form__field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{field}}
+        </div>
+        {% endfor %}
+        
+        
+        <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+        <img id="loaderIcon" style="visibility:hidden; display:none; height:40px; width: 40px; margin-bottom: -12px;" 
+        src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="..."/>
+        
+        <br>
+        
+        {% if jobpost %}
+        
+        <a href="{% url 'delete-jobpost' jobpost.id %}">
+        <input class="btn btn--sub btn--lg  my-md "  style="background-color: #fbf5f3;color:#ec470a" type="button" value="Delete Job Post" />
+        </a>
+      
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</main>
+
+<!--  script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('#jobedit_form').submit(function() {
+            $('#loaderIcon').css('visibility', 'visible');
+            $('#loaderIcon').show();
+        });
+    })
+</script>
+
+{% endblock content %}

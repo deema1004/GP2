@@ -1,0 +1,246 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+  <!-- Main Section -->
+  <main class="settingsPage profile my-md">
+    <div class="container">
+      <div class="layout">
+        <div class="column column--1of3">
+          <div class="card text-center">
+            <div class="card__body dev" style="height: 640px;" >
+             
+              
+
+              
+              <label class="switch">
+              
+                <input type="checkbox"  id="checkbox" onClick="save()">
+                <span class="slider round"></span>
+              </label>
+              <br>
+             
+            
+              
+
+            
+            <br>
+            <img class="avatar avatar--xl dev__avatar" src="{{jobpost.organaization_logo.url}}" />
+              <h2 class="dev__name">{{jobpost.postion_name}}</h2>
+              <p class="dev__title">By <a href="{% url 'account' %}">{{jobpost.owner.name}}</a></p>
+              <p class="dev__location"">Based in {{jobpost.city}}</p>
+              <p class="dev__location">{{jobpost.job_type}}</p>
+              
+              <p class="dev__location">{{jobpost.organaization}}</p>
+              {% if jobpost.average_salary %}
+              <p class="dev__location">{{jobpost.average_salary}}</p>
+              {% endif %}
+             
+                 <br>
+                  <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'edit-account' %}"><i class="im im-plus"></i> Applicants</a>
+                  
+                  <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'edit-account' %}"><i class="im im-plus"></i> Sent offers</a>
+                  
+             
+             
+              <br>
+              
+              
+             
+            </div>
+          </div>
+        </div>
+        
+        <div class="column column--2of3 " >
+          
+         
+
+          <div class="settings" >
+            <h3 class="settings__title"></h3>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'update-jobpost' jobpost.id %}"><i class="im im-plus"></i> Edit Job Post</a>
+          </div><br>
+          <h3 class="settings__title">Job brief</h3>
+          <div class="devInfo" >
+            
+            <br>
+            <p class="devInfo__about" style="color:black" >
+              {% autoescape on %}
+              {{ jobpost.job_brief  | linebreaksbr }}
+              {% endautoescape %}
+             
+             
+            </p>
+          </div>
+          <h3 class="settings__title">Responsibilities</h3>
+          <div class="devInfo" >
+            
+            <br>
+            <p class="devInfo__about" style="color:black" >
+              {% autoescape on %}
+              {{ jobpost.Responsibilities | linebreaksbr }}
+              {% endautoescape %}
+             
+             
+            </p>
+          </div>
+          <h3 class="settings__title">Technical skills</h3>
+          <div class="devInfo" >
+            
+            <br>
+            <p class="devInfo__about" style="color:black" >
+              {% autoescape on %}
+              {{ jobpost.Requirements_and_skills  | linebreaksbr }}
+              {% endautoescape %}
+             
+             
+            </p>
+          </div>
+          <h3 class="settings__title">Soft Skills</h3>
+          <div class="devInfo" >
+            
+            <br>
+            <p class="devInfo__about" style="color:black" >
+              {% autoescape on %}
+              {{ jobpost.soft_skills  | linebreaksbr }}
+              {% endautoescape %}
+             
+             
+            </p>
+          </div>
+          
+          
+           
+            
+           
+
+        </div>
+        
+      </div>
+      <h3 class="devInfo__title">Recommended candidates</h3>
+    </div>
+    
+    <section class="devlist" style="margin-top: 2%;">
+      
+      <div class="container">
+        <div class="grid grid--three">
+      
+          <div class="column card">
+            <div class="dev">
+              <a href="/profile.html" class="card__body">
+                <div class="dev__profile">
+                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/22437186" alt="image" />
+                  <div class="dev__meta">
+                    <h3>Shahriar P. Shuvo</h3>
+                    <h5>FullStack Web Designer & Developer</h5>
+                  </div>
+                </div>
+                <p class="dev__info">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
+                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
+                  animi, exercitationem molestias nam doloremque architecto odit.
+                </p>
+                <div class="dev__skills">
+                  <span class="tag tag--pill tag--main">
+                    <small>JavaScript</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>React</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>SCSS</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>Nodejs</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>Express</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>GraphQL</small>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column card">
+            <div class="dev">
+              <a href="/profile.html" class="card__body">
+                <div class="dev__profile">
+                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/1868782" alt="image" />
+                  <div class="dev__meta">
+                    <h3>Cody Seibert</h3>
+                    <h5>React Developer, Coding Youtuber</h5>
+                  </div>
+                </div>
+                <p class="dev__info">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
+                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
+                  animi, exercitationem molestias nam doloremque architecto odit.
+                </p>
+                <div class="dev__skills">
+                  <span class="tag tag--pill tag--main">
+                    <small>Elixir</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>F#</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>.NET</small>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column card">
+            <div class="dev">
+              <a href="/profile.html" class="card__body">
+                <div class="dev__profile">
+                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/33843378" alt="image" />
+                  <div class="dev__meta">
+                    <h3>Dennis Ivy</h3>
+                    <h5>Python & Django Developer</h5>
+                  </div>
+                </div>
+                <p class="dev__info">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
+                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
+                  animi, exercitationem molestias nam doloremque architecto odit.
+                </p>
+                <div class="dev__skills">
+                  <span class="tag tag--pill tag--main">
+                    <small>Python</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>Django</small>
+                  </span>
+                  <span class="tag tag--pill tag--main">
+                    <small>Rest API</small>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+          
+          
+         
+        </div>
+      </div>
+    </section>
+    
+
+  </main>
+ 
+  <script type="text/JavaScript">
+    function save() {	
+      var checkbox = document.getElementById("checkbox");
+      localStorage.setItem("checkbox", checkbox.checked);	
+    }
+
+    var checked = JSON.parse(localStorage.getItem("checkbox"));
+    document.getElementById("checkbox").checked = checked;
+  </script>
+
+  {% endblock content %}

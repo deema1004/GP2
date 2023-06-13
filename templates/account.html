@@ -1,0 +1,188 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+
+  <!-- Main Section -->
+  <main class="settingsPage profile my-md">
+    <div class="container">
+      <div class="layout">
+        <div class="column column--1of3">
+          <div class="card text-center">
+            <div class="card__body dev" style="height: 570px;" >
+             
+              {% if account.user.is_Seeker %}
+              
+              
+              <label class="switch">
+              
+                <input type="checkbox"  id="checkbox" onClick="save()">
+                <span class="slider round"></span>
+              </label>
+              <br>
+             
+              
+              {% endif %}
+              
+
+            
+            <br>
+              <img class="avatar avatar--xl dev__avatar" src="{{account.profile_image.url}}" />
+              <h2 class="dev__name">{{user.first_name}}</h2>
+              {% if account.short_intro %}
+              <p class="dev__title">{{account.short_intro}}</p>
+              {% endif %}
+              <p class="dev__location">Based in {{account.city}}</p>
+              {% if account.user.is_Recruiter %}
+              <p class="dev__location">{{account.organization}}</p>
+              {% endif %}
+              <ul class="dev__social">
+                {% if account.social_github %}
+                <li>
+                  <a title="Github" href="{{account.social_github}}" target="_blank"><i class="zmdi zmdi-github-alt" style="font-size: 1.5em;"></i></a>
+                </li>
+                {% endif %}
+                {% if account.social_twitter %}
+                <li>
+                  <a title="Twitter" href="{{account.social_twitter}}" target="_blank"><i class="zmdi zmdi-twitter" style="font-size: 1.5em;"></i></a>
+                </li>
+                {% endif %}
+                {% if account.social_linkedin %}
+                <li>
+                  <a title="LinkedIn" href="{{account.social_linkedin}}" target="_blank"><i class="zmdi zmdi-linkedin" style="font-size: 1.4em;"></i></a>
+                </li>
+                {% endif %}
+                {% if account.social_website %}
+                <li>
+                  <a title="Personal Website" href="{{account.social_website}}" target="_blank"><i class="zmdi zmdi-globe" style="font-size: 1.4em;"></i></a>
+                </li>
+                {% endif %}
+              </ul>
+             
+              <br>
+              
+              
+             
+            </div>
+          </div>
+        </div>
+        
+        <div class="column column--2of3">
+          
+         
+
+          <div class="settings">
+            <h3 class="settings__title">About Me</h3>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'edit-account' %}"><i class="im im-plus"></i> Edit Profile</a>
+          </div>
+          <div class="devInfo">
+            <br>
+            <p class="devInfo__about">
+             {% if account.bio %}
+              {% autoescape on %}
+              {{ account.bio | linebreaksbr }}
+              {% endautoescape %}
+              {% else %}
+              you don't have bio.
+              {% endif %}
+            </p>
+          </div>
+          
+
+          {%if account.user.is_Seeker %}
+          
+          <div class="settings">
+            <h3 class="settings__title">Technical skills</h3>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'add-skill' %}"><i class="im im-plus"></i> Add Skill</a>
+          </div>
+
+          
+          
+          <br>
+          <div class="devInfo__otherSkills " style="background-color:  #f4ffff">
+              {% for skill in skills %}
+              {% if skill.category != sk %}
+                <span  class="tag  tag--lg tag--main" style="background-color:  #f4ffff">
+                  <small style="background-color:  #f4ffff">{{skill.name}} </small>
+                </span>
+              {% endif%}
+              {% endfor %}
+          
+              
+              
+
+          </div>
+          <br> 
+          <h3 class="settings__title">Soft skills</h3>
+          <br>
+          <div class="devInfo__otherSkills " style="background-color:  #f4ffff">
+              {% for skill in skills %}
+              {% if skill.category == sk %}
+                <span  class="tag  tag--lg tag--main" style="background-color:  #f4ffff">
+                  <small style="background-color:  #f4ffff">{{skill.name}} </small>
+                </span>
+              {% endif%}
+              
+              {% endfor %}
+          
+              
+              
+
+          </div>
+          <br>
+          <div class="settings">
+            <h3 class="settings__title">Past Projects</h3>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-project' %}"><i class="im im-plus"></i> Add Project</a>
+          </div>
+          {%if projects%}
+          <table class="settings__table">
+            {% for Project in projects %} 
+            <tr>
+              <td class="settings__tableInfo">
+                <h4>{{ Project.name}}   </h4>
+                <p>
+                  {{ Project.description}}
+                  <a href="{{ Project.link }}" class="zmdi zmdi-share" style="color:#49899b;"></a>
+                </p>
+                
+              </td>
+              <td class="settings__tableActions">
+                <a class="tag tag--pill tag--sub settings__btn" href="{% url 'update-project' Project.id %}"><i class="im im-edit"></i> Edit</a>
+                <a class="tag tag--pill tag--sub  settings__btn" href="{% url 'delete-project' Project.id %}"><i class="im im-x-mark-circle-o"></i>
+                  Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+          
+          </table>
+          {% else %}
+          <br>
+          <p class="devInfo__about">you don't have any projects</p>
+          {% endif %}
+
+         
+        
+          {% else %}
+          <img src="{% static 'images/dashboard.png'%}">
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="text/JavaScript">
+    function save() {	
+      var checkbox = document.getElementById("checkbox");
+      localStorage.setItem("checkbox", checkbox.checked);	
+    }
+
+    var checked = JSON.parse(localStorage.getItem("checkbox"));
+    document.getElementById("checkbox").checked = checked;
+  </script>
+
+  {% endblock content %}
