@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<form class="form" action ='' method="POST">
+    {% csrf_token %}
+    <div class="auth" style="margin-top: -5%; ">
+    <div class="card">
+<div class="content-box">
+    <div class="formWrapper">
+        <div class="form__field">
+            <label >are you sure you want to delete "{{object}}"?</label>
+            <div class="auth__actions">
+                {% if project %}
+                <a class="btn btn--sub btn--lg" href="{% url 'account' %}">Cancel</a>
+                {% else %}
+                <a class="btn btn--sub btn--lg" href="{% url 'myjobs' %}">Cancel</a>
+                {% endif %}
+                <input class="btn btn--sub btn--lg" style="background-color: brown;" type="submit" value="confirm" />
+                
+              </div>
+            
+         
+          </div>
+        </div>
+</div>
+
+  
+
+
+     </div>
+</div>
+</form>
+{% endblock content %}
+

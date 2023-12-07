@@ -1,0 +1,206 @@
+
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+    
+    <!-- Main Section -->
+    <main class="home">
+      {% if similarity_scores %}
+        <section class="hero-section text-center" >
+          <div class="container container--narrow"  style="margin-top:3%;">
+            <div class="hero-section__box" >
+        
+            
+        {% else %}
+        <section class="hero-section text-center" style="height:635px;">
+          <div class="container container--narrow"  style="margin-top:17%;height:620px;">
+            <div class="hero-section__box" >
+              <br>
+        {% endif %}
+            <h2>EXPLORE <span>BEST Job Offers</span></h2>
+            <h2>in Saudi Arabia! </h2>
+          
+  
+            <div class="hero-section__search">
+              <form class="form" method="POST" action="{% url 'SeekerHome' %}">
+                {% csrf_token %}
+                <div class="form__field" style="display: flex;">
+                  
+
+                    <select id="Jobtype" name="Jobtype" style="margin-right: 10px;">
+                      <option value="" disabled selected>Select Job Type</option>
+                      
+    
+                        <option value="Full-time">Full time</option>
+                        <option value="Part-time">Part time</option>
+                     
+                    </select>
+
+                    <select id="city" name="city" onchange="removeLabel('city')" style="margin-left: 10px;" >
+                      <option value="" disabled selected>Select City</option>
+                      {% for city in city_names %}
+                        <option value="{{ city }}">{{ city }}</option>
+                      {% endfor %}
+                    </select>
+                  
+                    
+                  
+                    
+              
+                
+                    
+                  
+              
+                </div>
+
+               
+                
+                <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+                <img id="loaderIcon" style="visibility:hidden; display:none; height:40px; width: 40px; margin-bottom: -12px;" 
+        src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="..."/>
+              </form>
+
+            </div>
+        </div>
+        </div>
+      </section>
+
+       <!-- Search Result: DevList -->
+       <section class="devlist">
+        
+        
+        <div class="container" style="margin-top: -3%;">
+          <h5 style="color:rgb(27, 27, 27)">Hello <a>{{user.first_name}}</a>! We've handpicked the most relevant job posts just for you : </h5>
+          <br>
+          <div class="grid grid--three">
+            {% for job in similarity_scores %}
+           
+            <div class="column card">
+              <div class="dev">
+
+                
+                {% if job.2 %}
+                <div class="dev__skills">
+               
+                  <span style="background-color: rgb(208, 241, 208);" class="tag tag--pill tag--main">
+                    <small style="background-color: rgb(208, 241, 208);color:rgb(84, 143, 84)" > Applied</small>
+                  </span>
+                
+                  
+                  
+                </div>
+                {% else %}
+                <div class="dev__skills">
+               
+                 <br>
+                
+                
+                  
+                  
+                </div>
+                {% endif %}
+                
+                <a href="{% url 'seeker-jobpost' job.1.id seeker_email %}" class="card__body">
+                  <div class="dev__profile">
+                    <img class="avatar avatar--md" src="{{job.1.organaization_logo.url}}" alt="image" />
+
+                    <div class="dev__meta">
+                      <div style="display: flex; flex-direction: row; align-items: center;">
+                        <h3>{{job.1.postion_name}}</h3>
+                        <!-- <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                      </div>
+                      <h5>{{job.1.job_brief|slice:"50" }}...</h5>
+                      
+                      
+                    </div>
+                  </div>
+                  <p class="dev__info">
+                    {{job.1.Responsibilities|slice:"250" }}
+                  </p>
+                  <div class="dev__skills">
+                    
+                    
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+
+
+           
+          </div>
+        </div>
+      </section>
+      
+      <section class="devlist">
+        
+        
+        <div class="container" style="margin-top: -4%;">
+          <h5 style="color:rgb(27, 27, 27)">If you are interested in considering less relevant job posts, you can review them here : </h5>
+          <br>
+          <div class="grid grid--three">
+            {% for job in Remaining_posts %}
+           
+            <div class="column card">
+              <div class="dev">
+             
+                {% if job.2 %}
+                <div class="dev__skills">
+               
+                  <span style="background-color: rgb(208, 241, 208);" class="tag tag--pill tag--main">
+                    <small style="background-color: rgb(208, 241, 208);color:rgb(84, 143, 84)" > Applied</small>
+                  </span>
+                
+                  
+                  
+                </div>
+                {% else %}
+                <div class="dev__skills">
+               
+                 <br>
+                
+                
+                  
+                  
+                </div>
+                {% endif %}
+
+                <a href="{% url 'seeker-jobpost' job.1.id seeker_email %}" class="card__body">
+                  <div class="dev__profile">
+                    <img class="avatar avatar--md" src="{{job.1.organaization_logo.url}}" alt="image" />
+
+                    <div class="dev__meta">
+                      <div style="display: flex; flex-direction: row; align-items: center;">
+                        <h3>{{job.1.postion_name}}</h3>
+                        <!-- <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                      </div>
+                      <h5>{{job.1.job_brief|slice:"50" }}...</h5>
+                      
+                      
+                    </div>
+                  </div>
+                  <p class="dev__info">
+                    {{job.1.Responsibilities|slice:"250" }}
+                  </p>
+                  <div class="dev__skills">
+                    
+                    
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+
+
+           
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+  
+{% endblock content %}
+

@@ -1,0 +1,264 @@
+
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+    
+    <!-- Main Section -->
+    <main class="home">
+      
+        {% if similarity_scores %}
+        <section class="hero-section text-center" >
+          <div class="container container--narrow"  style="margin-top:3%;">
+            <div class="hero-section__box" >
+        
+            
+        {% else %}
+        <section class="hero-section text-center" style="height:635px;">
+          <div class="container container--narrow"  style="margin-top:17%;height:620px;">
+            <div class="hero-section__box" >
+              <br>
+        {% endif %}
+            <h2>EXPLORE <span>BEST CANDIDATES</span></h2>
+            <h2>in Saudi Arabia! </h2>
+          
+  
+            <div class="hero-section__search">
+              <form class="form" method="POST" action="{% url 'RecruiterHome' %}" id="SearchC_form">
+                {% csrf_token %}
+                <div class="form__field" style="display: flex;">
+                  
+
+                    <select id="position" name="position" onchange="removeLabel('position')" style="margin-right: 10px;">
+                      <option value="" disabled selected>Select Position</option>
+                      {% for job_post in job_posts %}
+    
+                        <option value="{{ job_post.id }}">{{ job_post.postion_name }}</option>
+                      {% endfor %}
+                    </select>
+
+                    <select id="city" name="city" onchange="removeLabel('city')" style="margin-left: 10px;" >
+                      <option value="" disabled selected>Select City</option>
+                      {% for city in city_names %}
+                        <option value="{{ city }}">{{ city }}</option>
+                      {% endfor %}
+                    </select>
+                  
+                    
+                  
+                    
+              
+                
+                    
+                  
+              
+                </div>
+
+               
+                
+                <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+
+                <img id="loaderIcon" style="visibility:hidden; display:none; height:40px; width: 40px; margin-bottom: -12px;" 
+        src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="..."/>
+              </form>
+
+            </div>
+        </div>
+        </div>
+      </section>
+      {% if similarity_scores %}
+      <!-- Search Result: DevList -->
+      <section class="devlist">
+        
+       
+        <div class="container" style="margin-top: -3%;">
+          <h5 style="color:rgb(27, 27, 27)">Hello <a>{{user.first_name}}</a>! We've handpicked the most relevant seekers just for you : </h5>
+          <br>
+          <div class="grid grid--three">
+            
+            {% for seeker in similarity_scores %}
+           
+            <div class="column card">
+             
+             
+             
+              <div class="dev">
+                {% if seeker.3 %}
+                <div class="dev__skills">
+               
+                  <span style="background-color: rgb(208, 241, 208);" class="tag tag--pill tag--main">
+                    <small style="background-color: rgb(208, 241, 208);color:rgb(84, 143, 84)" > Offer sent</small>
+                  </span>
+                
+                  
+                  
+                </div>
+                {% else %}
+                <div class="dev__skills">
+               
+                 <br>
+                
+                
+                  
+                  
+                </div>
+                {% endif %}
+
+
+                <a href="{% url 'view-seeker-profile' seeker.0.email job_post %}" class="card__body">
+                  <div class="dev__profile">
+                    <img class="avatar avatar--md" src="{{seeker.0.profile_image.url}}" alt="image" />
+                    <div class="dev__meta">
+                      <div style="display: flex; flex-direction: row; align-items: center;">
+                        <h3>{{seeker.0.user.first_name}}</h3>
+                       <!--  <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                      </div>
+                      {% if seeker.0.short_intro %}
+                      <h5>{{seeker.0.short_intro}}</h5>
+                      {% else %}
+                      <h5>...</h5>
+                      {% endif %}
+                      
+                    </div>
+                  </div>
+                  <p class="dev__info">
+                    {{seeker.0.bio|slice:"250" }}
+                  </p>
+                  <div class="dev__skills">
+                    {% for skill in seeker.2|slice:":10" %}
+                    <span class="tag tag--pill tag--main">
+                     
+                      <small> {{skill}}</small>
+                    </span>
+                    {% endfor %}
+                    
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+
+
+           
+          </div>
+        </div>
+      </section>
+      <!-- 
+      {% if similarity_scores|length >= 6 %}
+      <div class="pagination">
+        <ul class="container">
+          <li><a href="#" class="btn btn--disabled">&#10094; Prev</a></li>
+          <li><a href="#" class="btn btn--sub">01</a></li>
+          <li><a href="#" class="btn">02</a></li>
+          <li><a href="#" class="btn">03</a></li>
+          <li><a href="#" class="btn">04</a></li>
+          <li><a href="#" class="btn">05</a></li>
+          <li><a href="#" class="btn">06</a></li>
+          <li><a href="#" class="btn">07</a></li>
+          <li><a href="#" class="btn">08</a></li>
+          <li><a href="#" class="btn">09</a></li>
+          <li><a href="#" class="btn">10</a></li>
+          <li><a href="#" class="btn">Next &#10095;</a></li>
+        </ul>
+      </div> -->
+      {% endif %}
+      {% endif %}
+
+
+      {% if remaining_seekers %}
+      <!-- Search Result: DevList -->
+      <section class="devlist">
+        
+       
+        <div class="container" style="margin-top: -3%;">
+          <h5 style="color:rgb(27, 27, 27)">If you are interested in considering candidates who may be less relevant, you can review them here: </h5>
+          <br>
+          <div class="grid grid--three">
+            
+            {% for seeker in remaining_seekers %}
+           
+            <div class="column card">
+             
+             
+             
+              <div class="dev">
+                {% if seeker.3 %}
+                <div class="dev__skills">
+               
+                  <span style="background-color: rgb(208, 241, 208);" class="tag tag--pill tag--main">
+                    <small style="background-color: rgb(208, 241, 208);color:rgb(84, 143, 84)" > Offer sent</small>
+                  </span>
+                
+                  
+                  
+                </div>
+                {% else %}
+                <div class="dev__skills">
+               
+                 <br>
+                
+                
+                  
+                  
+                </div>
+                {% endif %}
+
+
+                <a href="{% url 'view-seeker-profile' seeker.0.email job_post %}" class="card__body">
+                  <div class="dev__profile">
+                    <img class="avatar avatar--md" src="{{seeker.0.profile_image.url}}" alt="image" />
+                    <div class="dev__meta">
+                      <div style="display: flex; flex-direction: row; align-items: center;">
+                        <h3>{{seeker.0.user.first_name}}</h3>
+                          <!--  <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                      </div>
+                      {% if seeker.0.short_intro %}
+                      <h5>{{seeker.0.short_intro}}</h5>
+                      {% else %}
+                      <h5>...</h5>
+                      {% endif %}
+                      
+                    </div>
+                  </div>
+                  <p class="dev__info">
+                    {{seeker.0.bio|slice:"250" }}
+                  </p>
+                  <div class="dev__skills">
+                    {% for skill in seeker.2|slice:":10" %}
+                    <span class="tag tag--pill tag--main">
+                     
+                      <small> {{skill}}</small>
+                    </span>
+                    {% endfor %}
+                    
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+
+
+           
+          </div>
+        </div>
+      </section>
+     
+      {% endif %}
+     
+    </main>
+
+    <!--  script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('#SearchC_form').submit(function() {
+            $('#loaderIcon').css('visibility', 'visible');
+            $('#loaderIcon').show();
+        });
+    })
+</script>
+  
+{% endblock content %}
+

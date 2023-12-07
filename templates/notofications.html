@@ -1,0 +1,87 @@
+
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="settingsPage profile my-md">
+  <div class="settings">
+    <h3 class="settings__title" style="margin-left:15%;" > &nbsp;notifications</h3>
+  </div>
+  
+  <table class="settings__table" style="width:70%;margin-left: auto; margin-right: auto;">
+    {% if request.user.is_Seeker %}
+      {% for offer in SortJobOffers %}
+        <tr {% if offer.is_new %}style="background-color: aliceblue;"{% endif %}>
+          <td class="settings__tableInfo" style="width:80%">
+            <h4>New Offer</h4>
+            <p>from {{offer.jobpost.owner.name}} for {{offer.jobpost.postion_name}}</p>
+          </td>
+          <td class="settings__tableActions tdwidth" width="900">
+            <a class="tag tag--pill tag--sub settings__btn" href="{% url 'seeker-jobpost' offer.jobpost.id offer.seeker.email %}" onclick="markOfferAsSeen('{{ offer.seeker.email }}', '{{ offer.jobpost.id }}')" style="margin-right:17%;">
+              <i class="im im-x-mark-circle-o" style="text-align: center;"></i> View
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+
+
+    {% elif request.user.is_Recruiter %}
+      {% for application in SortJobApplies %}
+        <tr {% if application.is_new %}style="background-color: aliceblue;"{% endif %}>
+          <td class="settings__tableInfo" style="width:80%">
+            <h4>New Application</h4>
+            <p>From {{application.seeker.name}} for {{application.jobpost.postion_name}}</p>
+          </td>
+          <td class="settings__tableActions tdwidth" width="900">
+            <a class="tag tag--pill tag--sub settings__btn" href="{% url 'view-seeker-profile' application.seeker.email application.jobpost.id %}" onclick="markApplicationAsSeen('{{ application.seeker.email }}', '{{ application.jobpost.id }}')" style="margin-right:17%;">
+              <i class="im im-x-mark-circle-o" style="text-align: center;"></i> View
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+        function markOfferAsSeen(seekerEmail, jobpostId) {
+      // Make an AJAX request to mark the offer as seen
+      // using the seekerId and jobpostId parameters
+      // Example using jQuery:
+      $.ajax({
+        url: '/accounts/mark-offer-as-seen/',
+        method: 'POST',
+        data: { seekerEmail: seekerEmail, jobpostId: jobpostId, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function(response) {
+          // Handle the success response, if needed
+        },
+        error: function(xhr, status, error) {
+          // Handle the error, if needed
+        }
+      });
+    }
+
+    function markApplicationAsSeen(seekerEmail, jobpostId) {
+      // Make an AJAX request to mark the application as seen
+      // using the seekerId and jobpostId parameters
+      // Example using jQuery:
+      $.ajax({
+        url: '/accounts/mark-application-as-seen/',
+        method: 'POST',
+        data: { seekerEmail: seekerEmail, jobpostId: jobpostId, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function(response) {
+          // Handle the success response, if needed
+        },
+        error: function(xhr, status, error) {
+          // Handle the error, if needed
+        }
+      });
+    }
+
+  </script>
+
+</main>
+
+{% endblock content %}

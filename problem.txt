@@ -1,0 +1,37 @@
+problem:
+
+thesedays, recruiters are feeling frustrated from spending countless hours sorting through stacks of resumes, only to find that none of the candidates are suitable for the job!!
+On the other hand, job seekers are missing out on many opportunities as recruiters struggle to identify their CVs from the large number of applications.
+
+solution : 
+
+Well, fear not! 
+
+1- Hiral leverages the latest advancements in AI technology to quickly identify the ideal candidates for a position
+
+2- also, our application simplifies job searches by targeting the best candidates and job offers, saving time and effort in finding the ideal match.
+
+roadmap:
+
+background:
+
+ai resume : AI tools analyze resumes and job posts, helping recruiters quickly screen candidates and save time and money. There are three categories of these tools, all designed to automate resume screening.
+
+keyword and statistical: 
+AI categorizes candidates by identifying industry-specific terms in their CVs to match them with required skills.
+
+Statistical parsing analyzes resumes or job posts with numerical algorithms and understands words and phrases. It identifies addresses and dates and differentiates the same word used differently.
+
+Semantic similarity compares two texts based on meaning or context, not just spelling or grammar.
+
+Sentence transformers use deep learning to create embeddings that capture a sentence's meaning. These embeddings measure the semantic similarity between pairs of sentences using cosine similarity, which compares the words used in each sentence using a mathematical formula and assigns a score indicating their similarity.
+
+
+litruture review: 
+
+
+
+
+كشكول:
+
+problem : these days recriuters are tired of spending hours sifting through stacks of resumes, only to find that none of the candidates are suitable for the job? Do you find yourself drowning in a sea of irrelevant job offers, searching for that one needle in a haystack?

@@ -1,0 +1,36 @@
+
+
+{% extends 'main.html' %}
+
+{% block content %}
+
+<!-- Main Section -->
+<main class="formPage my-xl">
+  <div class="content-box">
+    <div class="formWrapper">
+      <a style="font-size: 21px;" class="backButton" href="{% url 'myjobs' %}"><<i class="im im-angle-left"></i></a>
+      <br>
+
+      <form class="form" method="POST" enctype="multipart/form-data" class="form auth__form ">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form__field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{field}}
+        </div>
+        {% endfor %}
+
+        <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+        <br>
+        {% if jobpost %}
+        <a href="{% url 'delete-jobpost' jobpost.id %}">
+        <input class="btn btn--sub btn--lg  my-md"  style="background-color: #fbf5f3;color:#ec470a" type="button" value="Delete Job Post" />
+        </a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</main>
+
+{% endblock content %}

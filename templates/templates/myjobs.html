@@ -1,0 +1,41 @@
+
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="settingsPage profile my-md">
+  <div class="settings">
+    <h3 class="settings__title" style="margin-left:15%;" > &nbsp;My jobs</h3>
+    <a class="tag tag--pill tag--sub settings__btn tag--lg" style="margin-right:15%;" href="{% url 'create-jobpost' %}"><i class="im im-plus"></i> Add Job Post</a>
+  </div>
+  <table class="settings__table" style="width:70%;margin-left: auto;
+  margin-right: auto;" >
+  {% for job in jobposts %}
+    <tr>
+      
+      <td class="settings__tableInfo" style="width:80%">
+        <h4>{{job.postion_name}}</h4>
+        <p>
+          Consectetur adipisicing elit. Natus nam dolore aut sed vitae eos architecto unde tempore
+          exercitationem fugiat?...
+        </p>
+      </td>
+     
+      <td class="settings__tableActions tdwidth" width="900">
+       
+        <a class="tag tag--pill tag--sub settings__btn" href="#" style="text-align: center;"><i class="im im-edit"></i> Search candidites </a>
+        <a class="tag tag--pill tag--sub  settings__btn" href="{% url 'user-jobpost' job.id  %}" style="margin-right:17%;"  ><i class="im im-x-mark-circle-o" style="text-align: center;"></i>
+           View </a> 
+      </td>
+      
+      
+    </tr>
+    {% endfor %}
+   
+  </table>
+</main>
+
+{% endblock content %}
+
+

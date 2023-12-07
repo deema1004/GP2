@@ -1,0 +1,61 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<main class="Home">
+  <div class="container">
+    <br>
+
+<div class="settings">
+  <h3 class="settings__title">All Applications Sent </h3>
+  
+</div>
+</div>
+
+<section class="devlist" style="margin-top: 2%;">
+        
+        
+  <div class="container">
+    <div class="grid grid--three">
+      {% for application in applications %}
+     
+      <div class="column card">
+        <div class="dev">
+          <a href="{% url 'seeker-jobpost' application.jobpost.id application.seeker.email %}" class="card__body">
+            <div class="dev__profile">
+              <img class="avatar avatar--md" src="{{application.jobpost.organaization_logo.url}}" alt="image" />
+
+              <div class="dev__meta">
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                  <h3>{{application.jobpost.postion_name}}</h3>
+                  <!-- <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                </div>
+                <h5>{{application.jobpost.job_brief|slice:"50" }}...</h5>
+                
+                
+              </div>
+            </div>
+            <p class="dev__info">
+              {{application.jobpost.Responsibilities|slice:"250" }}
+            </p>
+            
+          </a>
+        </div>
+      </div>
+      
+   
+      {% endfor %}
+
+
+     
+    </div>
+  </div>
+</section>
+
+
+  </div>
+
+
+</main>
+{% endblock content %}
+

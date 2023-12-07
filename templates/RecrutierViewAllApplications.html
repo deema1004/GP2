@@ -1,0 +1,72 @@
+
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<main class="Home">
+  <div class="container">
+    <br>
+
+<div class="settings">
+  <h3 class="settings__title">All Applications</h3>
+</div>
+</div>
+
+<section class="devlist" style="margin-top: 2%;">
+        
+        
+  <div class="container">
+    <div class="grid grid--three">
+      {% for offer in applications %}
+      
+     
+      <div class="column card">
+        <div class="dev">
+          <div class="card__body">
+            <div class="dev__profile">
+              <a href="{% url 'view-seeker-profile' offer.seeker.email offer.jobpost.id %}" >
+              <img class="avatar avatar--md" src="{{offer.seeker.profile_image.url}}" alt="image" />
+              <div class="dev__meta">
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                  <h3>{{offer.seeker.user.first_name}}</h3>
+                  <!-- <h5 style="color:black;margin-left: 85px;">{{seeker.1 }}% similar</h5> -->
+                </div>
+                
+                {% if offer.seeker.short_intro %}
+                <h5>{{offer.seeker.short_intro}}</h5>
+                {% else %}
+                <h5>...</h5>
+                {% endif %}
+              </a>
+              </div>
+
+            </div>
+
+            <h4 class="dev__info">
+              Applied To : <a href="{% url 'user-jobpost' offer.jobpost.id  %}">{{offer.jobpost.postion_name }}</a>
+            </h4>
+
+            <p class="dev__info">
+              {{offer.seeker.bio|slice:"250" }}...
+            </p>
+            
+          </div>
+        </div>
+      </div>
+   
+      {% endfor %}
+
+
+     
+    </div>
+  </div>
+</section>
+
+
+  </div>
+
+
+
+</main>
+{% endblock content %}
+

@@ -1,0 +1,47 @@
+
+
+{% extends 'main.html' %}
+
+{% block content %}
+
+<!-- Main Section -->
+<main class="formPage my-xl">
+  <div class="content-box">
+    <div class="formWrapper">
+      <a style="font-size: 21px;" class="backButton" href="{% url 'account' %}"><<i class="im im-angle-left" ></i></a>
+      <br>
+
+      <form class="form" method="POST" enctype="multipart/form-data" class="form auth__form " id="account_form">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form__field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% if field.name == 'cv' %} <!-- Check if the field is the 'cv' field -->
+          {{ field }}
+          <p>Accepted file formats: .docx, .txt, .rtf</p>
+          {% else %}
+          {{ field }}
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+        <img id="loaderIcon" style="visibility:hidden; display:none; height:40px; width: 40px; margin-bottom: -12px;" 
+        src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="..."/>
+      </form>
+    </div>
+  </div>
+</main>
+<!--  script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('#account_form').submit(function() {
+            $('#loaderIcon').css('visibility', 'visible');
+            $('#loaderIcon').show();
+        });
+    })
+</script>
+{% endblock content %}

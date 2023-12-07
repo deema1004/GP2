@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <!-- Icon - IconMonster -->
+    <link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"/>
+    <!-- Mumble UI -->
+    <link rel="stylesheet" href="/static/uikit/styles/uikit.css"/>
+    <!-- Dev Search UI -->
+    <link rel="stylesheet" href="/static/styles/app.css"/>
+
+    <style type="text/css">
+        body {
+            margin-top: 20px;
+        }
+
+        .chat-online {
+            color: #34ce57;
+        }
+
+        .chat-offline {
+            color: #e4606d;
+        }
+
+        .chat-messages {
+            display: flex;
+            max-height: 400px;
+            overflow-y: scroll;
+            flex-direction: column-reverse;
+        }
+
+        .chat-message-left,
+        .chat-message-right {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .chat-message-left {
+            margin-right: auto;
+        }
+
+        .chat-message-right {
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+
+        .py-3 {
+            padding-top: 1rem!important;
+            padding-bottom: 1rem!important;
+        }
+
+        .px-4 {
+            padding-right: 1.5rem!important;
+            padding-left: 1.5rem!important;
+        }
+
+        .flex-grow-0 {
+            flex-grow: 0!important;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6!important;
+        }
+    </style>
+
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <title>Hiral - Connect with the world!</title>
+</head>
+
+<body>
+<main class="content">
+    <div class="container p-0">
+
+        <h1 class="h3 mb-3">Messages</h1>
+
+        <div class="card">
+            <div class="row">
+                <div class="col s12 m5 l3 border-right">
+
+                    <div class="px-4 hide-on-small-only">
+                        <div class="valign-wrapper">
+                            <div class="flex-grow-1">
+
+                                <input type="text" class="validate my-3" placeholder="Search...">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-rooms">
+
+                        <a data-to_user="112" data-roomId="b3505a51-393d-4f84-bf9a-9539fff10829" data-toggle="true"
+                           href="#"
+                           class="collection-item room-div">
+                            <div class="valign-wrapper">
+                                <img src="/images/user-default.png" style="width: 2rem; height: 2rem;"
+                                     class="circle responsive-img mr-1" alt="Vanessa Tucker">
+                                <div class="valign-wrapper">
+                                    <div class="chip">
+                                        Hamod Alshaya
+                                        <div class="small">
+                                            <p id="msg_counter_b3505a51-393d-4f84-bf9a-9539fff10829"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a data-to_user="108" data-roomId="afebb06f-8e89-4cbe-8e81-c482fd5b6c6b" data-toggle=false
+                           href="#"
+                           class="collection-item room-div">
+                            <div class="valign-wrapper">
+                                <img src="/images/hide-page-title-wordpress.jpg" style="width: 2rem; height: 2rem;"
+                                     class="circle responsive-img mr-1" alt="Vanessa Tucker">
+                                <div class="valign-wrapper">
+                                    <div class="chip">
+                                        Mohammed alrjhi
+                                        <div class="small">
+                                            <p id="msg_counter_afebb06f-8e89-4cbe-8e81-c482fd5b6c6b"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a data-to_user="109" data-roomId="0c24a05b-d488-4159-b7bd-487d64810bfb" data-toggle=false
+                           href="#"
+                           class="collection-item room-div">
+                            <div class="valign-wrapper">
+                                <img src="/images/user-default.png" style="width: 2rem; height: 2rem;"
+                                     class="circle responsive-img mr-1" alt="Vanessa Tucker">
+                                <div class="valign-wrapper">
+                                    <div class="chip">
+                                        Noura Al jumiah
+                                        <div class="small">
+                                            <p id="msg_counter_0c24a05b-d488-4159-b7bd-487d64810bfb"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+
+                    <hr class="d-block d-lg-none mt-1 mb-0">
+                </div>
+
+                <div class="col s12 l7 xl9">
+                    <div class="py-2 px-4 border-bottom d-none d-lg-block">
+                        <div class="d-flex align-items-center py-1">
+                            <div class="position-relative">
+
+                                <img src="/images/user-default.png" class="circle responsive-img mr-1" alt="Humairah"
+                                     style="width: 2rem; height: 2rem;">
+
+                            </div>
+                            <div class="flex-grow-1 pl-3">
+                                <strong id="user-chatting-with-name">Hamod Alshaya</strong>
+                                <!-- <div class="text-muted small"><em>Typing...</em></div> -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="position-relative">
+                        <div id="all-msgs" class="chat-messages p-4">
+
+                            <div class="chat-message-right mb-4">
+                                <div>
+
+                                    <img src="/images/user-default.png" class="circle responsive-img mr-1" alt="Atheer"
+                                         style="width: 40px; height: 40px;">
+
+                                </div>
+                                <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                                    <div class="

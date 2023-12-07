@@ -1,0 +1,14 @@
+python>=3.11.4
+Django>=4.2.2
+pillow>=9.5.0
+six>=1.0.5
+email-validator>=2.0.0
+spacy>=3.4.0
+en_core_web_sm>=3.5.0
+en_core_web_lg>=3.5.0
+chardet>=5.1.0
+docx2txt>=0.8
+textract>=1.6.5
+ipython>=0.1.1
+skillNer>=1.0.3
+sentence-transformers
