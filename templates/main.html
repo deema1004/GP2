@@ -60,7 +60,44 @@
 
   <script src="{% static 'uikit/app.js' %}"></script>
   {% block scripts %}
+    <script>
+      var user = "{{ user.username }}";
+      console.log(user);
 
+      var ws_protocol = "ws:";
+      if (location.protocol == "https:"){
+        ws_protocol = "wss:"
+      };
+  
+      var ws_url = `${ws_protocol}//${location.host}/notification/`;
+      console.log(ws_url);
+  
+      const socket = new WebSocket(
+        ws_url,
+      );
+
+      socket.onopen = function(e){
+        console.log("Event ", e)
+      };
+
+      socket.onclose = function(e){
+        console.log("Event ", e)
+      };
+
+      socket.onmessage = function(e){
+        console.log("Event ", e)
+        var notTab = document.getElementById("notification-tab");
+        var aTagNotTab = notTab.getElementsByTagName("a")[0];
+        var span = document.createElement("span");
+        span.classList.add("notification-mark");
+        aTagNotTab.appendChild(span);
+      };
+
+      socket.onerror = function(e){
+        console.log("Event ", e)
+      };
+
+    </script>
   {% endblock scripts %}
 </html>
 

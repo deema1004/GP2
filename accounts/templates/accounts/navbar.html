@@ -54,7 +54,7 @@
             <li class="header__menuItem"><a href="{% url 'SeekerHome' %}">Home</a></li>
             <li class="header__menuItem"><a href="{% url 'S-Activites' %}">Activites</a></li>
             <li class="header__menuItem"><a href="">Dashboard</a></li>
-            <li class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
+            <li id="notification-tab" class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
                 <a href="{% url 'notofications' %}">Notifications</a>
                 {% if request.user.email|has_new_offers %}
                     <span class="notification-mark"></span>
@@ -66,7 +66,7 @@
             <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/Recruiter/myjobs/' %}active{% endif %}">
                 <a href="{% url 'myjobs' %}">My jobs</a>
             </li>
-            <li class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
+            <li id="notification-tab" class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
                 <a href="{% url 'notofications' %}">Notifications</a>
                 {% if request.user.email|has_new_applications %}
                     <span class="notification-mark"></span>

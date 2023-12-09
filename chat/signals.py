@@ -25,12 +25,10 @@ def send_notification_to_user(sender, instance, created, **kwargs):
         else:
             to_user = room.user1
         
-        rooms = ChatRoom.objects.filter(Q(user1=to_user) | Q(user2=to_user))
-        counter = ChatMessage.objects.filter(~Q(user=to_user), room__in=rooms, seen=False).count()
+        # rooms = ChatRoom.objects.filter(Q(user1=to_user) | Q(user2=to_user))
         chat_room = f"notification_room_{to_user.id}"
         data = {
             "command": "incoming_message",
-            "count": counter
         }
         async_to_sync(channel_layer.group_send)(
                 chat_room, 

@@ -9,7 +9,7 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.urls import path
-from chat.consumers import ChatConsumer
+from chat.consumers import ChatConsumer, NotificationConsumer
 from channels.security.websocket import AllowedHostsOriginValidator
 # from chat.middleware import TokenAuthMiddleware
 from channels.auth import AuthMiddlewareStack
@@ -17,6 +17,7 @@ from channels.auth import AuthMiddlewareStack
 
 websocket_urlpatterns = [
     path("message/", ChatConsumer.as_asgi(), ),
+    path("notification/", NotificationConsumer.as_asgi(), ),
 ]
 
 application = ProtocolTypeRouter({

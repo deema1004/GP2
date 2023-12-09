@@ -348,9 +348,6 @@ class NotificationConsumer(AsyncConsumer):
         )
         print("Notification Layer Added")
 
-        obj = await self.create_user_online_status()
-        print("Creating Online from Notification Consumer", obj)
-
     async def websocket_receive(self, event):
         print("[RECEIVED] ", event)
     

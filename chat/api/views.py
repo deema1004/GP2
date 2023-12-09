@@ -62,4 +62,5 @@ def create_room_api_view(request):
     room = ChatRoom.objects.get_or_create_room(request.user, user_id)
     serializer = ChatRoomSerializer(instance=room)
     serializer.context["request"] = request
+    room.save()
     return Response(serializer.data)
