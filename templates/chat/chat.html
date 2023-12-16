@@ -6,6 +6,13 @@
     <style type="text/css">
       body{margin-top:20px;}
   
+      .online {
+        color: #86c541
+      }
+      .status {
+        color: #999;
+        font-size: 12.5px
+      }
       .chat-online {
           color: #34ce57
       }
@@ -51,8 +58,21 @@
           border-top: 1px solid #dee2e6!important;
       }
       .navbar{
-      background:transparent !important;
+          background:transparent !important;
       }
+
+      .green-bubble-dot {
+          background-color: #4CAF50; /* Green color */
+          color: #4CAF50; /* White text color */
+          width: 10px; /* Adjust width as needed */
+          height: 10px; /* Adjust height as needed */
+          border-radius: 50%; /* Make it a circle */
+          text-align: center; /* Center text horizontally */
+          line-height: 10px; /* Center text vertically */
+          display: inline-block; /* Display as inline-block to contain content */
+          margin-right: 0px; /* Adjust margin as needed */
+      }
+
     </style>
   
 
@@ -70,52 +90,76 @@
 
 
 
-      <nav class="navbar navbar-expand" style="padding-top: 0px;">
-        <div class="container-fluid bg-dark">
-            <a href="/" class="w-100">
-                <img src="{% static 'images/logo.png' %}" class="mt-0" width="120" alt="Logo">
+      <nav class="navbar navbar-expand bg-dark" style="    padding: 0.5rem 0; background-color: #302c3c !important;">
+        <div class="container" style="padding: 0 7rem;">
+            <a href="/" class="navbar-brand">
+                <img src="{% static 'images/logo.png' %}" class="mt-0 w-100" style="height:1.9rem;"  alt="Logo">
             </a>
-            <div class="navbar-nav">
-              <div class="navbar-nav justify-content-center">
-                <a href="{% url 'chat-view' %}" class="nav-link text-light" style="color: var(--color-light); font-weight: 300; font-size: 10px; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ms-auto col-10 nav-fill " style="    display: inline-flex;align-items: center;list-style: none;gap: 2.2rem;">
+              <li class="nav-item">
+                <a href="{% url 'chat-view' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-weight: 400; font-size: 12.5px; text-decoration: none;
+                  font-family: var(--font-base);">
                   Inbox
                 </a>
+              </li>
                 {% if request.user.is_authenticated and request.user.is_Seeker %}
-                <a href="{% url 'SeekerHome' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+                <li class="nav-item">
+                <a href="{% url 'SeekerHome' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
                   Home
                 </a>
-                <a href="{% url 'S-Activites' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+                </li>
+                <li class="nav-item">
+                <a href="{% url 'S-Activites' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
                   Activites
                 </a>
+                </li>
                 {% elif request.user.is_authenticated and request.user.is_Recruiter %}
-                <a href="{% url 'RecruiterHome' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+                <li class="nav-item">
+                <a href="{% url 'RecruiterHome' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
                   Home
                 </a>
-                <a href="{% url 'R-Activites' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+                </li>
+                <li class="nav-item">
+                <a href="{% url 'R-Activites' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
                   Activites
-                </a>
+                </a></li>
+                <li class="nav-item">
+                  <a href="{% url 'myjobs' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                    font-family: var(--font-base);">
+                    Posted jobs
+                  </a></li>
                 {% endif %}
-  
-                <a href="{% url 'account' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
+                <li class="nav-item">
+                <a href="{% url 'account' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
                   Account
                 </a>
-                <a href="{% url 'logout' %}" class="nav-link text-light" style="color: var(--color-light); font-size: 10px; font-weight: 300; text-decoration: none;
-                  font-family: Poppins, arial, helvetica, 'Segoe UI', roboto, ubuntu, Bangla1072, sans-serif">
-                  Logout
-                </a>
-              </div>
+                </li>
+                <li class="nav-item">
+                <a href="{% url 'notofications' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Notifications
+                </a></li>
+
+              
+
+                  <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                      font-family: var(--font-base);">
+                      Logout
+                    </a></li>
+              </ul>
 
             </div>
-            <div class="w-100"></div>
-        </div>
+          </div>
+       
     </nav>
-
+  
           <script>
               var lis = document.querySelectorAll('.header__menu li');
               for (var i = 0; i < lis.length; i++) {
@@ -138,7 +182,7 @@
       </div>
     </header>
     
-    <main class="content">
+    <main class="content" style="background-color: #F8FAFD;padding-top:1.3rem;">
       <div class="container p-0">
   
       <h1 class="h3 mb-3">Messages</h1>
@@ -168,10 +212,10 @@
                   <div class="d-flex align-items-start">
                     <img src="{{ loop_to_user.get_profile_image.url }}" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="Vanessa Tucker">
                     <div class="flex-grow-1 ml-3">
-                      {%if room.user1 == user%}{{room.user2.first_name}}{%else%}{{room.user1.first_name}}{%endif%}
+                      {%if room.user1 == user%}<div class="user">{{room.user2.first_name}}</div>{%else%}<div class="user">{{room.user1.first_name}}</div>{%endif%}
                       
-                      <div class="small"><span class="fas fa-circle chat-offline"></span>{% if loop_to_user.is_online %} Online{% else %} Offline{% endif %}</div>
-                      
+                      <!-- <div class="small"><div class="status"> <i class="fa fa-circle online"></i></div></div> -->
+                      <div class="status"> {% if loop_to_user.is_online %}<span class="green-bubble-dot">•</span> online{% else %} offline{% endif %} </div>
                       {% get_unseen_msgs_count room loop_to_user as unseen_msgs %}
                       {% if unseen_msgs > 0 %}
                       <div class="small badge bg-primary text-wrap" style="width: 1rem; height: 1rem;">
@@ -428,8 +472,9 @@
           var roomId = div.getAttribute("data-roomId");
           console.log(div);
           var chatNameElement = document.getElementById("user-chatting-with-name");
-          chatNameElement.textContent = div.textContent;
-          
+
+          chatNameElement.textContent = div.getElementsByTagName("div")[0].getElementsByTagName("div")[0].getElementsByClassName('user')[0].textContent;
+
           var divPTag = div.getElementsByTagName("p")[0];
           divPTag.textContent = "";
           

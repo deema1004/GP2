@@ -68,8 +68,8 @@
 
 <div class="container">
 <div class="settings">
-  <h3 class="settings__title">Sent Offers</h3>
-  <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'all-offers-rec'  %}"><i class="im im-plus"></i> View all sent offers</a>
+  <h3 class="settings__title">Sent Proposals</h3>
+  <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'all-offers-rec'  %}"><i class="im im-plus"></i> View all sent Proposals</a>
 </div>
 </div>
 <section class="devlist" style="margin-top: 2%;">
@@ -102,7 +102,7 @@
             </div>
             
             <h4 class="dev__info">
-              Job Offerd : <a href="{% url 'user-jobpost' offer.jobpost.id  %}">{{offer.jobpost.postion_name }}</a>
+              Job Proposed : <a href="{% url 'user-jobpost' offer.jobpost.id  %}">{{offer.jobpost.postion_name }}</a>
             </h4>
             <p class="dev__info">
               {{offer.seeker.bio|slice:"250" }}...

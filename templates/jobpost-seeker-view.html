@@ -127,9 +127,9 @@
           <div class="settings" >
             <h3 class="settings__title"></h3>
             {% if exist %}
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'Apply' jobpost.id seeker_id %}"><i class="im im-plus"></i> Apply </a>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href=""><i class="im im-plus"></i> Application sent </a>
             {% else %}
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'Apply' jobpost.id seeker_id %}"><i class="im im-plus"></i> Applied </a>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'Apply' jobpost.id seeker_id %}"><i class="im im-plus"></i> Apply </a>
             {% endif %}
           </div><br>
           <h3 class="settings__title">Job brief</h3>

@@ -18,7 +18,7 @@
               
               <label class="switch">
               
-                <input type="checkbox"  id="checkbox" onClick="save()">
+                <input type="checkbox" id="checkbox-{{ jobpost.id }}" onclick="toggleActive('{{ jobpost.id }}', this.checked)" {% if jobpost.is_active %}checked{% endif %}>
                 <span class="slider round"></span>
               </label>
               <br>
@@ -131,120 +131,67 @@
       <div class="container">
         <div class="grid grid--three">
       
-          <div class="column card">
-            <div class="dev">
-              <a href="/profile.html" class="card__body">
-                <div class="dev__profile">
-                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/22437186" alt="image" />
-                  <div class="dev__meta">
-                    <h3>Shahriar P. Shuvo</h3>
-                    <h5>FullStack Web Designer & Developer</h5>
-                  </div>
+          
+            {% for top_candidates in jobpost.topcandidates_set.all %}
+              {% for seeker in top_candidates.seekers.all %}
+              <div class="column card">
+                <div class="dev">
+                  <a href="{% url 'view-seeker-profile' seeker.email jobpost.id %}" class="card__body">
+                    <div class="dev__profile">
+                      <img class="avatar avatar--md" src="{{ seeker.profile_image.url }}" alt="image" />
+                      <div class="dev__meta">
+                        <h3>{{ seeker.name }}</h3>
+                        <h5>{{ seeker.short_intro }}</h5>
+                      </div>
+                    </div>
+                    <p class="dev__info">
+                      {{ seeker.bio|slice:"250" }}
+                    </p>
+                    <div class="dev__skills">
+                      {% for skill in seeker.skill_set.all|slice:":10" %}
+                        <span class="tag tag--pill tag--main">
+                          <small>{{ skill.name }}</small>
+                        </span>
+                      {% endfor %}
+                    </div>
+                  </a>
                 </div>
-                <p class="dev__info">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
-                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
-                  animi, exercitationem molestias nam doloremque architecto odit.
-                </p>
-                <div class="dev__skills">
-                  <span class="tag tag--pill tag--main">
-                    <small>JavaScript</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>React</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>SCSS</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>Nodejs</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>Express</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>GraphQL</small>
-                  </span>
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="column card">
-            <div class="dev">
-              <a href="/profile.html" class="card__body">
-                <div class="dev__profile">
-                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/1868782" alt="image" />
-                  <div class="dev__meta">
-                    <h3>Cody Seibert</h3>
-                    <h5>React Developer, Coding Youtuber</h5>
-                  </div>
-                </div>
-                <p class="dev__info">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
-                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
-                  animi, exercitationem molestias nam doloremque architecto odit.
-                </p>
-                <div class="dev__skills">
-                  <span class="tag tag--pill tag--main">
-                    <small>Elixir</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>F#</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>.NET</small>
-                  </span>
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="column card">
-            <div class="dev">
-              <a href="/profile.html" class="card__body">
-                <div class="dev__profile">
-                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/33843378" alt="image" />
-                  <div class="dev__meta">
-                    <h3>Dennis Ivy</h3>
-                    <h5>Python & Django Developer</h5>
-                  </div>
-                </div>
-                <p class="dev__info">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate, ducimus inventore! Sunt,
-                  veniam veritatis? Veritatis placeat, deleniti iure tempore veniam perspiciatis, soluta cupiditate
-                  animi, exercitationem molestias nam doloremque architecto odit.
-                </p>
-                <div class="dev__skills">
-                  <span class="tag tag--pill tag--main">
-                    <small>Python</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>Django</small>
-                  </span>
-                  <span class="tag tag--pill tag--main">
-                    <small>Rest API</small>
-                  </span>
-                </div>
-              </a>
-            </div>
-          </div>
+              </div>
+              {% endfor %}
+            {% endfor %}
+          
+          
           
           
          
         </div>
       </div>
     </section>
+    <div class="home">
     
+  </div>
 
   </main>
  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/JavaScript">
-    function save() {	
-      var checkbox = document.getElementById("checkbox");
-      localStorage.setItem("checkbox", checkbox.checked);	
-    }
-
-    var checked = JSON.parse(localStorage.getItem("checkbox"));
-    document.getElementById("checkbox").checked = checked;
+  function toggleActive(jobPostId, isActive) {
+    // Make an AJAX request to update the job.is_active value on the server
+    $.ajax({
+      url: "{% url 'toggle-active' %}",
+      method: "POST",
+      data: {
+        job_post_id: jobPostId,
+        is_active: isActive ? "true" : "false",
+        csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      success: function(response) {
+        // Handle success response if needed
+      },
+      error: function(xhr, status, error) {
+        // Handle error response if needed
+      }
+    });
+  }
   </script>
-
   {% endblock content %}

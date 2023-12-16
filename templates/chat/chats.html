@@ -1,0 +1,597 @@
+{% load chat_extras %}
+{% load static %}
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <style type="text/css">
+      body{margin-top:20px;}
+  
+      .online {
+        color: #86c541
+      }
+      .status {
+        color: #999;
+        font-size: 12.5px
+      }
+      .chat-online {
+          color: #34ce57
+      }
+  
+      .chat-offline {
+          color: #e4606d
+      }
+  
+      .chat-messages {
+          display: flex;
+  
+          max-height: 400px;
+          overflow-y: scroll;
+          flex-direction: column-reverse;
+      }
+  
+      .chat-message-left,
+      .chat-message-right {
+          display: flex;
+          flex-shrink: 0
+      }
+  
+      .chat-message-left {
+          margin-right: auto
+      }
+  
+      .chat-message-right {
+          flex-direction: row-reverse;
+          margin-left: auto
+      }
+      .py-3 {
+          padding-top: 1rem!important;
+          padding-bottom: 1rem!important;
+      }
+      .px-4 {
+          padding-right: 1.5rem!important;
+          padding-left: 1.5rem!important;
+      }
+      .flex-grow-0 {
+          flex-grow: 0!important;
+      }
+      .border-top {
+          border-top: 1px solid #dee2e6!important;
+      }
+      .navbar{
+          background:transparent !important;
+      }
+
+      .green-bubble-dot {
+          background-color: #4CAF50; /* Green color */
+          color: #4CAF50; /* White text color */
+          width: 10px; /* Adjust width as needed */
+          height: 10px; /* Adjust height as needed */
+          border-radius: 50%; /* Make it a circle */
+          text-align: center; /* Center text horizontally */
+          line-height: 10px; /* Center text vertically */
+          display: inline-block; /* Display as inline-block to contain content */
+          margin-right: 0px; /* Adjust margin as needed */
+      }
+
+    </style>
+  
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Chat</title>
+  </head>
+  <body>
+    <header>
+
+
+
+      <nav class="navbar navbar-expand bg-dark" style="    padding: 0.5rem 0; background-color: #302c3c !important;">
+        <div class="container" style="padding: 0 7rem;">
+            <a href="/" class="navbar-brand">
+                <img src="{% static 'images/logo.png' %}" class="mt-0 w-100" style="height:1.9rem;"  alt="Logo">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ms-auto col-10 nav-fill " style="    display: inline-flex;align-items: center;list-style: none;gap: 2.2rem;">
+              <li class="nav-item">
+                <a href="{% url 'chat-view' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-weight: 400; font-size: 12.5px; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Inbox
+                </a>
+              </li>
+                {% if request.user.is_authenticated and request.user.is_Seeker %}
+                <li class="nav-item">
+                <a href="{% url 'SeekerHome' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Home
+                </a>
+                </li>
+                <li class="nav-item">
+                <a href="{% url 'S-Activites' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Activites
+                </a>
+                </li>
+                {% elif request.user.is_authenticated and request.user.is_Recruiter %}
+                <li class="nav-item">
+                <a href="{% url 'RecruiterHome' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Home
+                </a>
+                
+               
+
+                </li>
+                <li class="nav-item">
+                <a href="{% url 'R-Activites' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Activites
+                </a></li>
+
+                <li class="nav-item">
+                  <a href="{% url 'myjobs' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                    font-family: var(--font-base);">
+                    Posted jobs
+                  </a></li>
+                {% endif %}
+               
+
+               
+                <li class="nav-item">
+                <a href="{% url 'notofications' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                  font-family: var(--font-base);">
+                  Notification
+                </a></li>
+
+                <li class="nav-item">
+                  <a href="{% url 'account' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                    font-family: var(--font-base);">
+                    Account
+                  </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link text-light" style="color: #e5e7eb!important; font-size: 12.5px; font-weight: 400; text-decoration: none;
+                      font-family: var(--font-base);">
+                      Logout
+                    </a></li>
+              </ul>
+
+            </div>
+          </div>
+       
+    </nav>
+  
+          <script>
+              var lis = document.querySelectorAll('.header__menu li');
+              for (var i = 0; i < lis.length; i++) {
+                  lis[i].addEventListener('click', function () {
+                      // Remove active class from all other li elements
+                      for (var j = 0; j < lis.length; j++) {
+                          lis[j].classList.remove('active');
+                      }
+                      // Add active class to clicked li element
+                      if (!this.classList.contains('active')) {
+                          this.classList.add('active');
+                      }
+                      // Store the active menu item in local storage
+                      localStorage.setItem('activeMenuItem', this.textContent);
+                  });
+    
+              }
+          </script>
+    
+      </div>
+    </header>
+    
+    <main class="content" style="background-color: #F8FAFD;padding-top:1.3rem;">
+      <div class="container p-0">
+  
+      <h1 class="h3 mb-3">Messages</h1>
+  
+      <div class="card">
+        <div class="row g-0">
+          <div class="col-12 col-lg-5 col-xl-3 border-right">
+  
+            <div class="px-4 d-none d-md-block">
+              <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                  {% if room_first_user != "None" %}
+                    <input type="text" id="search" onkeyup="searchFunction()" class="form-control my-3" placeholder="Search...">
+                  {% else %}
+                    <h1>No one to chat with</h1>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+  
+            <div class="chat-rooms">
+              {% for room in chat_rooms %}
+                {% get_to_user room request.user as loop_to_user %}
+  
+                <a data-to_user="{{ loop_to_user.id }}" data-roomId="{{ room.id }}" data-toggle={%if forloop.counter == 1 %}"true"{%else%}false{%endif%} href="#" 
+                  class="list-group-item list-group-item-action border-0 room-div">
+                  <div class="d-flex align-items-start">
+                    <img src="{{ loop_to_user.get_profile_image.url }}" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="Vanessa Tucker">
+                    <div class="flex-grow-1 ml-3">
+                      {%if room.user1 == user%}<div class="user">{{room.user2.first_name}}</div>{%else%}<div class="user">{{room.user1.first_name}}</div>{%endif%}
+                      
+                      <!-- <div class="small"><div class="status"> <i class="fa fa-circle online"></i></div></div> -->
+                      <div class="status"> {% if loop_to_user.is_online %}<span class="green-bubble-dot">•</span> online{% else %} offline{% endif %} </div>
+                      {% get_unseen_msgs_count room loop_to_user as unseen_msgs %}
+                      {% if unseen_msgs > 0 %}
+                      <div class="small badge bg-primary text-wrap" style="width: 1rem; height: 1rem;">
+                        <p id="msg_counter_{{ room.id }}">{{ unseen_msgs }}</p>
+                      {% else %}
+                      <div class="small">
+                        <p id="msg_counter_{{ room.id }}"></p>
+                      {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </a> 
+              {% endfor %}
+            </div>
+  
+  
+            <hr class="d-block d-lg-none mt-1 mb-0">
+          </div>
+          {% if room_first_user != "None" %}
+            <div class="col-12 col-lg-7 col-xl-9">
+              <div class="py-2 px-4 border-bottom d-none d-lg-block">
+                <div class="d-flex align-items-center py-1">
+                  <div class="position-relative">
+                    {% if room_first_user.get_profile_image %}
+                      <img src="{{ room_first_user.get_profile_image.url }}" class="rounded-circle mr-1" alt="Humairah" style="width: 3rem; height: 3rem;">
+                    {% else %}
+                      <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="Humairah" style="width: 3rem; height: 3rem;">
+                    {% endif %}
+                  </div>
+                  <div class="flex-grow-1 pl-3">
+                    <strong id="user-chatting-with-name">{{ room_first_user.first_name }}</strong>
+                    <!-- <div class="text-muted small"><em>Typing...</em></div> -->
+                  </div>
+  
+                </div>
+              </div>
+  
+              <div class="position-relative">
+                <div id="all-msgs" class="chat-messages p-4">
+                  {% for message in messages %}
+                    {% if request.user != message.user %}
+                      <div class="chat-message-left pb-4">
+                        <div>
+                          {% if message.user.get_profile_image %}
+                            <img src="{{ message.user.get_profile_image.url }}" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="{{ message.user.first_name }}">
+                            <div class="text-muted small text-nowrap mt-2">{{ message.get_time_in_words }}</div>  
+                          {% else %}
+                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="{{ message.user.first_name }}">
+                            <div class="text-muted small text-nowrap mt-2">{{ message.get_time_in_words }}</div>  
+                          {% endif %}
+                        </div>
+                        <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+                          <div class="font-weight-bold mb-1">{{ message.user.first_name }}</div>
+                          {{ message.message }}
+                        </div>
+                      </div>
+                      {% else %}
+                        <div class="chat-message-right mb-4">
+                          <div>
+                            {% if message.user.get_profile_image %}
+                              <img src="{{ message.user.get_profile_image.url }}" class="rounded-circle mr-1" alt="{{ message.user.first_name }}" width="40" height="40">
+                              <div class="text-muted small text-nowrap mt-2">{{ message.get_time_in_words }}</div>  
+                              {% else %}
+                              <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="{{ message.user.first_name }}" width="40" height="40">
+                              <div class="text-muted small text-nowrap mt-2">{{ message.get_time_in_words }}</div>  
+                              
+                            {% endif %}
+                          </div>
+                          <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                            <div class="font-weight-bold mb-1">You</div>
+                              {{ message.message }}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                </div>
+              </div>
+  
+              <div class="flex-grow-0 py-3 px-4 border-top">
+                <div class="input-group">
+                  <input id="msg-box" type="text" class="form-control" placeholder="Type your message">
+                  <button id="msg-box-btn" class="btn btn-primary">Send</button>
+                </div>
+              </div>
+  
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      var user = "{{ user.username }}";
+      console.log(user);
+  
+      var ws_protocol = "ws:";
+      if (location.protocol == "https:"){
+        ws_protocol = "wss:"
+      };
+  
+      var ws_url = `${ws_protocol}//${location.host}/message/?username=${user}`;
+      console.log(ws_url);
+  
+      const socket = new WebSocket(
+        ws_url,
+      );
+  
+  
+      window.onload = function(e){ 
+          var btn = document.getElementById("msg-box-btn");
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+  
+            var allRoomDivs = document.getElementsByClassName("room-div");
+  
+            var txtInp = document.getElementById("msg-box");
+            var val = txtInp.value;
+  
+            txtInp.value = "";
+            
+            if (allRoomDivs.length <= 0){
+              return null;
+            };
+  
+            for (i=0; i<allRoomDivs.length; i++){
+              let embDiv = allRoomDivs[i];
+              var dataToggle = embDiv.getAttribute("data-toggle");
+              if (dataToggle == "true"){
+                var user_id_to_send = embDiv.getAttribute("data-to_user");
+                break
+              };
+            };
+  
+            console.log(user_id_to_send);
+  
+            var msg_data = {
+              "room": "new_room",
+              "message": val,
+              "command": "new_message",
+              "user_id": user_id_to_send
+            };
+  
+            socket.send(JSON.stringify(msg_data))
+          })
+      }
+  
+      socket.onopen = (event) => {
+        // socket.send("Here's some text that the server is urgently awaiting!");
+        console.log(event);
+      };
+  
+      socket.onmessage = (event) => {
+        var msgData = JSON.parse(event.data)
+        console.log(msgData);
+        if (msgData.command == "new_message"){
+          var roomId = msgData.room;
+          var msgDiv = document.getElementById("all-msgs");
+          var senderName = "You";
+          var profileImage = "https://bootdey.com/img/Content/avatar/avatar1.png";
+          if (msgData.user.profile_image != null){
+            profileImage = msgData.user.profile_image;
+          };
+          if (msgData.is_me == false){
+            senderName = msgData.user.username;
+          };
+          var oneMsgDiv = document.createElement("div");
+          var roomDivs = document.querySelectorAll(".room-div");
+          roomDivs.forEach(div => {
+          let toggle = div.getAttribute("data-toggle");
+          if (toggle == "true"){
+            let divRoomId = div.getAttribute("data-roomId");
+            if (divRoomId == roomId){
+            let oneMsgDiv = document.createElement("div");
+            if (msgData.is_me == true){
+              oneMsgDiv.setAttribute("class", "chat-message-right mb-4")
+              oneMsgDiv.innerHTML = `
+                    <div>
+                      <img src="${profileImage}" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="admin_test">
+                      <div class="text-muted small text-nowrap mt-2">Now</div>  
+                      
+                    </div>
+                    <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                      <div class="font-weight-bold mb-1">You</div>
+                        ${msgData.message}
+                    </div>
+              `;
+            } else {
+              oneMsgDiv.setAttribute("class", "chat-message-left pb-4")
+              oneMsgDiv.innerHTML = `
+                    <div>
+                      <img src="${profileImage}" style="width: 3rem; height: 3rem;" class="rounded-circle mr-1" alt="admin_test">
+                      <div class="text-muted small text-nowrap mt-2">Now</div>  
+                      
+                    </div>
+                    <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+                      <div class="font-weight-bold mb-1">${senderName}</div>
+                      ${msgData.message}
+                    </div>
+              `;          
+            };
+            msgDiv.prepend(oneMsgDiv);
+            } else {
+  
+              // Mark a number beside chat
+            };
+            } else {
+              if (msgData.is_me != true){
+                var msgCountDiv = document.getElementById(`msg_counter_${roomId}`);
+                if (msgCountDiv.textContent == ""){
+                  msgCountDiv.textContent = 1;
+                }else {
+                  msgCountDiv.textContent = `${parseInt(msgCountDiv.textContent)+1}`;
+                }
+                var msgCountDivParent = msgCountDiv.parentElement;
+                msgCountDivParent.classList.add("badge");
+                msgCountDivParent.classList.add("bg-primary");
+                msgCountDivParent.classList.add("text-wrap");
+  
+                msgCountDivParent.style.width = "1rem";  
+                msgCountDivParent.style.height = "1rem";  
+  
+                // Mark a number beside chat
+  
+                let divRoomId = div.getAttribute("data-roomId");
+                if (divRoomId == roomId){
+                  console.log(div);
+                  var chatRoomDiv = div.parentElement;
+                  console.log(chatRoomDiv);
+                  chatRoomDiv.prepend(div);
+                };
+              };
+            };
+          });
+        };
+      };
+  
+      socket.onclose = (event) => {
+        console.log(event);
+      }
+  
+      var roomDivs = document.querySelectorAll(".room-div");
+      roomDivs.forEach(div => {
+        div.addEventListener("click", (e) => {
+          e.preventDefault();
+          allRoomDivs = document.querySelectorAll(".room-div");
+          allRoomDivs.forEach(embDiv => {
+            embDiv.setAttribute("data-toggle", "false");
+          });
+          div.setAttribute("data-toggle", "true");
+          
+          var roomId = div.getAttribute("data-roomId");
+          console.log(div);
+          var chatNameElement = document.getElementById("user-chatting-with-name");
+
+          chatNameElement.textContent = div.getElementsByTagName("div")[0].getElementsByTagName("div")[0].getElementsByClassName('user')[0].textContent;
+
+          var divPTag = div.getElementsByTagName("p")[0];
+          divPTag.textContent = "";
+          
+          var divPTagParent = divPTag.parentElement;
+          divPTagParent.classList.remove("badge");
+          divPTagParent.classList.remove("bg-primary");
+          divPTagParent.classList.remove("text-wrap");
+  
+          var url = `${location.origin}/api/chat/room/messages/${roomId}/`;
+          fetch(url, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then(response => {
+  
+              var seenMsgData = {
+                "command": "seen_message",
+                "room": roomId,
+                "all_message": true
+              };
+              socket.send(JSON.stringify(seenMsgData));
+  
+              result = response.json()
+              status_code = response.status;
+              if(status_code != 200) {
+                  console.log('Error in getting brand info!')
+                  return false;
+              }
+              
+              return result
+          })
+          .then(result => {
+              console.log(result);
+              var msgDiv = document.getElementById("all-msgs");
+              msgDiv.innerHTML = "";
+              for (var msgData of result){
+                var senderName = "You";
+                var timeInWords = "Now";
+                if (msgData.get_time != null){
+                  timeInWords = msgData.get_time;
+                };
+                var profileImage = "https://bootdey.com/img/Content/avatar/avatar3.png";
+                if (msgData.user.profile_image){
+                  profileImage = msgData.user.profile_image
+                }
+                if (msgData.is_me == false){
+                  senderName = msgData.user.first_name;
+                };
+                  var oneMsgDiv = document.createElement("div");
+  
+                  if (msgData.is_me == true){
+                    oneMsgDiv.setAttribute("class", "chat-message-right mb-4")
+                    oneMsgDiv.innerHTML = `
+                          <div>
+                            <img src="${profileImage}" class="rounded-circle mr-1" alt="admin_test" width="40" height="40">
+                            <div class="text-muted small text-nowrap mt-2">${timeInWords}</div>  
+                            
+                          </div>
+                          <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                            <div class="font-weight-bold mb-1">You</div>
+                              ${msgData.message}
+                          </div>
+                    `;
+                  } else {
+                    oneMsgDiv.setAttribute("class", "chat-message-left pb-4")
+                    oneMsgDiv.innerHTML = `
+                          <div>
+                            <img src="${profileImage}" class="rounded-circle mr-1" alt="admin_test" width="40" height="40">
+                            <div class="text-muted small text-nowrap mt-2">${timeInWords}</div>  
+                          </div>
+                          <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+                            <div class="font-weight-bold mb-1">${senderName}</div>
+                            ${msgData.message}
+                          </div>
+                    `;          
+                  };
+                msgDiv.appendChild(oneMsgDiv);
+              }
+  
+          })
+          .catch(error => {
+              console.log(error)
+          })
+  
+  
+        })
+      })
+  
+    </script>
+
+    <script>
+      function searchFunction() {
+        var input = document.getElementById("search");
+        var filter = input.value.toLowerCase();
+        var nodes = document.getElementsByClassName('room-div');
+
+        for (i = 0; i < nodes.length; i++) {
+          if (nodes[i].innerText.toLowerCase().includes(filter)) {
+            nodes[i].style.display = "block";
+          } else {
+            nodes[i].style.display = "none";
+          }
+        }
+      }
+    </script>
+  
+  </body>
+</html>
+
+<!-- No msg show -->

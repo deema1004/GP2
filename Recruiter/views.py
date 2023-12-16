@@ -3,11 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
+from .models import TopCandidates
 
 from .forms import JobPostForm
 from .models import JobPost, Dictionary, Offers
 from accounts.models import User, Recruiter, KnowledgeArea, City, Seeker, Skill
 from Seeker.models import Applications
+from django.http import JsonResponse
+
 
 import spacy
 from spacy.matcher import PhraseMatcher
@@ -20,7 +23,10 @@ from django.shortcuts import render
 from sentence_transformers import SentenceTransformer, util
 import numpy as np
 
+
 model = SentenceTransformer('stsb-roberta-large')
+
+
 
 def get_recruiter_job_posts(recruiter):
     return JobPost.objects.filter(owner=recruiter)
@@ -68,9 +74,9 @@ def send_job_offer(request, jobpost_id, seeker_id):
     if not offer_exists:
         offer = Offers(seeker=seeker, jobpost=jobpost, is_new=True)
         offer.save()
-        messages.success(request, 'Your offer has been sent! Check the activities page.')
+        messages.success(request, 'Your proposal has been sent! Check the activities page.')
     else:
-        messages.error(request, 'An offer already exists.')
+        messages.error(request, 'An proposal already exists.')
 
     return render_seeker_profile(request, seeker, jobpost)
 
@@ -96,7 +102,14 @@ def categorize_skills(seeker):
 
 
 def render_seeker_profile(request, seeker, job_post):
+
     sk_skills, tech_skills = categorize_skills(seeker)
+
+    offer_exists = Offers.objects.filter(seeker=seeker, jobpost=job_post).exists()
+    if not offer_exists:
+        exist = True
+    else:
+        exist = False
     
     context = {
         'seeker': seeker,
@@ -104,6 +117,7 @@ def render_seeker_profile(request, seeker, job_post):
         'sk_skills': sk_skills,
         'tech_skills': tech_skills,
         'projects': seeker.project_set.all(),
+        'exist':offer_exists
     }
 
     return render(request, 'Profile.html', context)
@@ -116,8 +130,13 @@ def calculate_similarity_scores(job_post, job_post_embedding, seekers):
        
         seeker_skills = " ".join(skill.name for skill in seeker.skill_set.all())
 
+        if seeker.education:
+          education= seeker.education
+        else:
+            education= ""
+
         if seeker_skills:
-            seeker_embeddings = model.encode(seeker_skills)
+            seeker_embeddings = model.encode(seeker_skills+education)
            
             similarity_scores.append((seeker, round(util.pytorch_cos_sim(seeker_embeddings, job_post_embedding)[0][0].item() * 100), seeker.skill_set.all(), offer_exists))
         
@@ -155,6 +174,20 @@ def RecruiterHome(request):
         
         # Optimize the database query by using prefetch_related to fetch related skills in advance
         seekers = Seeker.objects.filter(city__name=city, is_active=True).prefetch_related('skill_set')
+        
+        if not seekers:
+            job_posts = request.user.recruiter.jobpost_set.all()
+            cities = City.objects.all()
+            city_names = cities.values_list('name', flat=True)
+            messages.error(request, 'No seekers found in this city, Try another city!')
+            context = {
+            'city_names': city_names,
+            'job_posts': job_posts,
+            
+            }
+            
+            return render(request, 'RecruiterHome.html', context)
+            
 
         job_post_merge = job_post[0] + " " + job_post[1]
         job_post_embedding = model.encode(job_post_merge)
@@ -190,6 +223,7 @@ def RecruiterHome(request):
 
 def SearchFromMyJobs(request, job_post_id):
    
+
     job_post = JobPost.objects.filter(id=job_post_id).first()
     
     if job_post is not None:
@@ -197,7 +231,13 @@ def SearchFromMyJobs(request, job_post_id):
         
        
         seekers = Seeker.objects.filter(city__name=city, is_active=True).prefetch_related('skill_set')
-
+        if not seekers:
+            
+            messages.error(request, 'No seekers found in this city. Try to search from home for another cities')
+            
+            jobposts = request.user.recruiter.jobpost_set.all()
+            context = {'jobposts': jobposts} 
+            return render(request, 'myjobs.html', context)
         job_post_merge = job_post.Requirements_and_skills + " " + job_post.soft_skills
         job_post_embedding = model.encode(job_post_merge)
         
@@ -235,6 +275,7 @@ def userJobPosts(request):
 def userJobPost(request, pk):
     jobpost = get_object_or_404(JobPost, id=pk)
     context = {'jobpost': jobpost} 
+    update_top_candidates()
     return render(request, 'jobpost.html', context)
 
 
@@ -337,3 +378,61 @@ def create_skills(annotations, skill_category):
 
 def Recruiter(request):
     return render(request, 'Recruiter/RecruiterHome.html')
+
+
+def toggle_active(request):
+    if request.method == 'POST':
+        job_post_id = request.POST.get('job_post_id')
+        is_active = request.POST.get('is_active')
+
+        # Perform the necessary logic to update the `is_active` value for the job post
+        # Here's an example of updating the `is_active` value in the database
+
+        # Assuming you have a JobPost model
+        from .models import JobPost
+        job_post = JobPost.objects.get(id=job_post_id)
+        job_post.is_active = is_active == 'true'
+        job_post.save()
+
+        # Return a JSON response indicating success
+        return JsonResponse({'status': 'success'})
+
+    # Return a JSON response indicating failure if the request method is not POST
+    return JsonResponse({'status': 'failure'}, status=400)
+
+def calculate_similarity_scores_r(job_post_embedding, seekers):
+    similarity_scores = []
+    for seeker in seekers:
+        seeker_skills = " ".join(skill.name for skill in seeker.skill_set.all())
+        if seeker.education:
+          education= seeker.education
+        else:
+            education= ""
+
+        if seeker_skills:
+            seeker_embeddings = model.encode(seeker_skills+education)
+            similarity_scores.append((seeker, round(util.pytorch_cos_sim(seeker_embeddings, job_post_embedding)[0][0].item() * 100), seeker.skill_set.all()))
+            similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+
+    return similarity_scores
+
+def update_top_candidates():
+    seekers = Seeker.objects.filter(is_active=True)
+    job_posts = JobPost.objects.filter(is_active=True)
+
+    for job_post in job_posts:
+        top_candidates = []
+
+        if job_post.Requirements_and_skills is None or job_post.soft_skills is None:
+            continue
+
+        job_post_merge = job_post.Requirements_and_skills + " " + job_post.soft_skills
+        job_post_embedding = model.encode(job_post_merge)
+
+        similarity_scores = calculate_similarity_scores_r(job_post_embedding, seekers)
+        top_candidates = [seeker for seeker, _, _ in similarity_scores[:5]]  # Get top 5 candidates
+
+        # Create or update TopCandidates instance for the job post
+        top_candidates_instance, _ = TopCandidates.objects.get_or_create(job_post=job_post)
+        top_candidates_instance.seekers.set(top_candidates)
+        TopCandidates.objects.exclude(job_post__in=job_posts).delete()

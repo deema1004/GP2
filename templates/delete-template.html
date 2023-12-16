@@ -10,7 +10,7 @@
         <div class="form__field">
             <label >are you sure you want to delete "{{object}}"?</label>
             <div class="auth__actions">
-                {% if project %}
+                {% if project or skill %}
                 <a class="btn btn--sub btn--lg" href="{% url 'account' %}">Cancel</a>
                 {% else %}
                 <a class="btn btn--sub btn--lg" href="{% url 'myjobs' %}">Cancel</a>

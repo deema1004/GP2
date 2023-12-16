@@ -1,5 +1,6 @@
 
 {% load static %}
+{% load custom_filters %}
 
 <style>
   
@@ -11,6 +12,25 @@
   border-radius: 10px;
 }
 
+
+
+.header__menuItem.notification {
+    position: relative;
+  }
+
+  .header__menuItem.notification .notification-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+ 
+
+
 </style>
 
 <!-- Header Section -->
@@ -19,39 +39,58 @@
       <a href="" class="header__logo">
         <img src='{% static "images/logo.png" %}' alt="DevSearch Logo" />
       </a>
+      
       <nav class="header__nav">
         <input type="checkbox" id="responsive-menu" />
         <label for="responsive-menu" class="toggle-menu">
-          <span>Menu</span>
-          <div class="toggle-menu__lines"></div>
+            <span>Menu</span>
+            <div class="toggle-menu__lines"></div>
         </label>
         <ul class="header__menu">
-          {% if request.user.is_authenticated %}
-            <li class="header__menuItem"><a href="{% url 'chat-view' %}">Inbox</a></li>
-          {% endif %}
-
-          {% if request.user.is_authenticated and request.user.is_Seeker %}
-          <li class="header__menuItem "><a href="{% url 'SeekerHome' %}">Home</a></li>
-          <li class="header__menuItem"><a href="{% url 'S-Activites' %}">Activites</a></li>
-          <li class="header__menuItem"><a href="">Dashboard</a></li>
-          {% elif request.user.is_authenticated and request.user.is_Recruiter %}
-          <li class="header__menuItem "><a href="{% url 'RecruiterHome' %}">Home</a></li>
-          <li class="header__menuItem"><a href="{% url 'R-Activites' %}">Activites</a></li>
-          <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/Recruiter/myjobs/' %}active{% endif %}"><a href="{% url 'myjobs' %}">My jobs</a></li>
-         
-          {% endif %}
-          
-          {% if request.user.is_authenticated %}
-          <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/accounts/account/' %}active{% endif %}"><a href="{% url 'account' %}">Account</a></li>
-          
-          <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/accounts/logout/' %}active{% endif %}"><a href="{% url 'logout' %}" >Logout</a></li>
-          {% else %}
-          <li class="header__menuItem {% if request.path == '/accounts/login/' %}active{% endif %}"><a href="{% url 'login' %}" >Login/Sign Up</a></li>
-          {% endif %}
+            {% if request.user.is_authenticated and request.user.is_Seeker %}
+            <li class="header__menuItem"><a href="{% url 'SeekerHome' %}">Home</a></li>
+            <li class="header__menuItem"><a href="">Activites</a></li>
+            <li class="header__menuItem"><a href="">Dashboard</a></li>
+            <li class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
+                <a href="{% url 'notofications' %}">Notifications</a>
+                {% if request.user.email|has_new_offers %}
+                    <span class="notification-mark"></span>
+                {% endif %}
+            </li>
+            {% elif request.user.is_authenticated and request.user.is_Recruiter %}
+            <li class="header__menuItem"><a href="{% url 'RecruiterHome' %}">Home</a></li>
+            <li class="header__menuItem {% if request.path == '/Recruiter/RecruiterActivites/' %}active{% endif %}"><a href="{% url 'R-Activites' %}">Activites</a></li>
+            <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/Recruiter/myjobs/' %}active{% endif %}">
+                <a href="{% url 'myjobs' %}">Posted jobs</a>
+            </li>
+            <li class="header__menuItem {% if request.path == '/accounts/notofications/' %}active{% endif %} notification">
+                <a href="{% url 'notofications' %}">Notifications</a>
+                {% if request.user.email|has_new_applications %}
+                    <span class="notification-mark"></span>
+                {% endif %}
+            </li>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/accounts/account/' %}active{% endif %}">
+                <a href="{% url 'account' %}">Account</a>
+            </li>
+            <li class="header__menuItem {% if request.user.is_authenticated and request.path == '/accounts/logout/' %}active{% endif %}">
+                <a href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="header__menuItem {% if request.path == '/accounts/login/' %}active{% endif %}">
+                <a href="{% url 'login' %}">Login/Sign Up</a>
+            </li>
+            {% endif %}
         </ul>
-      </nav>
+    </nav>
       
+
+
+
       <script>
+     
+      
         var lis = document.querySelectorAll('.header__menu li');
         for (var i = 0; i < lis.length; i++) {
           lis[i].addEventListener('click', function() {
@@ -69,9 +108,10 @@
          
         }
       </script>
-
       
     </div>
+
+
   </header>
 
 

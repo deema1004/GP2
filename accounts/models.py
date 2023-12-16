@@ -34,7 +34,11 @@ class User(AbstractUser):
         return self.get_profile_image()
     
     def is_online(self):
-        return True
+        from chat.models import UserOnlineStatus
+        obj = UserOnlineStatus.objects.filter(user=self).last()
+        if obj is None:
+            return False
+        return obj.online
 
 
 class City(models.Model):
@@ -59,6 +63,7 @@ class Seeker(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=False)
     age = models.IntegerField(range(1, 75),null=True, blank=True)
     short_intro = models.CharField(max_length=200, null=True, blank=True)
+    education = models.CharField(max_length=200, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_image =models.ImageField(null=True, blank=True, default='user-default.png') 
     social_github = models.CharField(max_length=200, null=True, blank=True)
@@ -66,6 +71,7 @@ class Seeker(models.Model):
     social_linkedin = models.CharField(max_length=200, null=True, blank=True)
     social_website = models.CharField(max_length=200, null=True, blank=True)
     is_active=models.BooleanField(default=True)
+    numPOffers=models.IntegerField(range(1, 200), null=True)
 
     def __str__(self):
         return self.user.username
@@ -107,3 +113,9 @@ class Project(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+class NumberOfViews(models.Model):
+    count=models.IntegerField(blank=False, default=0)
+
+    def __str__(self):
+        return str(self.count)

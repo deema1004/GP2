@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chat.models import ChatRoom, ChatMessage
+from chat.models import ChatRoom, ChatMessage, UserOnlineStatus
 
 
 class ChatRoomAdmin(admin.ModelAdmin):
@@ -7,3 +7,4 @@ class ChatRoomAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ChatRoom, ChatRoomAdmin)
+admin.site.register(UserOnlineStatus)

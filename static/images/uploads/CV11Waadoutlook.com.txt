@@ -1,0 +1,22 @@
+﻿Waad
+Data engineer with experience 
+	123 Your Street
+Your City, ST 12345
+(123) 456-7890
+no_reply@example.com
+	EDUCATION
+King Saud University, computer science 
+Programming in several languages including(Python ,SQL, java) 
+Find solutions to complex problems, schema designing, security, unit testing, API, agile software 
+PROJECTS
+Hiral —
+In the project I learned to cooperate with my teammates, I learned how to communicate and improve our teamwork.
+	SKILLS
+* Test Automation -Data Warehousing -machine learning -data analysis -BigQuery -SQL Server -Postgres -Git -Integration -Cloud Computing -adaptability -Attention to details -problem solving 
+* * AWARDS
+Lorem ipsum dolor sit amet Consectetuer adipiscing elit, Sed diam nonummy
+Nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+Lorem ipsum dolor sit amet Consectetuer adipiscing elit, Sed diam nonummy
+Nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+LANGUAGES
+Lorem ipsum, Dolor sit amet, Consectetuer

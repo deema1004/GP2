@@ -3,10 +3,32 @@
 {% load static %}
 
 {% block content %}
+<style>
+  .switch {
+      --slider-width: 55px;
+      --slider-height: 30px;
+  }
+
+  .switch input[type="checkbox"] {
+      width: var(--slider-width);
+      height: var(--slider-height);
+  }
+
+  .switch .slider {
+      width: var(--slider-width);
+      height: var(--slider-height);
+  }
+
+  .switch .slider.round:before {
+      width: 20px;
+      height: 20px; 
+  }
+</style>
+
 
 <main class="settingsPage profile my-md">
   <div class="settings">
-    <h3 class="settings__title" style="margin-left:15%;" > &nbsp;My jobs</h3>
+    <h3 class="settings__title" style="margin-left:15%;" > &nbsp;Posted jobs</h3>
     <a class="tag tag--pill tag--sub settings__btn tag--lg" style="margin-right:15%;" href="{% url 'create-jobpost' %}"><i class="im im-plus"></i> Add Job Post</a>
   </div>
   <table class="settings__table" style="width:70%;margin-left: auto;
@@ -22,7 +44,13 @@
       </td>
      
       <td class="settings__tableActions tdwidth" width="900">
-       
+           
+        <label class="switch" style="margin-right: 35px;">
+              
+          <input type="checkbox" id="checkbox-{{ job.id }}" onclick="toggleActive('{{ job.id }}', this.checked)" {% if job.is_active %}checked{% endif %}>
+          <span class="slider round"></span>
+        </label>
+        <br>
         <a class="tag tag--pill tag--sub settings__btn" href="{% url 'search-jobpost' job.id  %}"  style="text-align: center;"><i class="im im-edit"></i> Search candidites </a>
         <a class="tag tag--pill tag--sub  settings__btn" href="{% url 'user-jobpost' job.id  %}" style="margin-right:17%;"  ><i class="im im-x-mark-circle-o" style="text-align: center;"></i>
            View </a> 
@@ -34,6 +62,29 @@
    
   </table>
 </main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/JavaScript">
+function toggleActive(jobPostId, isActive) {
+  // Make an AJAX request to update the job.is_active value on the server
+  $.ajax({
+    url: "{% url 'toggle-active' %}",
+    method: "POST",
+    data: {
+      job_post_id: jobPostId,
+      is_active: isActive ? "true" : "false",
+      csrfmiddlewaretoken: "{{ csrf_token }}"
+    },
+    success: function(response) {
+      // Handle success response if needed
+    },
+    error: function(xhr, status, error) {
+      // Handle error response if needed
+    }
+  });
+}
+</script>
+  
+
 
 {% endblock content %}
 

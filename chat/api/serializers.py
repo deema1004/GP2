@@ -45,7 +45,9 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_is_me(self, serializer):
-        request = self.context.get("request")
+        request = self.context.get("request", None)
+        if request is None:
+            return False
         return serializer.user == request.user
 
     def get_get_time(self, serializer):

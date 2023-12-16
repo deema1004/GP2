@@ -74,7 +74,16 @@
           <div class="settings">
             <h3 class="settings__title">About Me</h3>
             
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'send_job_offer' job_post.id seeker.email %}"><i class="im im-plus"></i> Send job offer</a>
+            {% if exist %}
+
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="">
+              <i class="im im-plus"></i> Proposal Already Sent</a>
+
+            {% else %}
+            
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'send_job_offer' job_post.id seeker.email %}"><i class="im im-plus"></i> Send job proposal</a>
+
+            {% endif %}
         </div>
           <div class="devInfo">
             <br>
@@ -88,6 +97,25 @@
               {% endif %}
             </p>
           </div>
+
+          {% if seeker.education %}
+          <div class="settings">
+            <h3 class="settings__title">Education</h3>
+           
+           
+          </div>
+
+          <div class="devInfo">
+            <br>
+            <p class="devInfo__about">
+              {% autoescape on %}
+              {{ seeker.education | linebreaksbr }}
+              {% endautoescape %}
+            </p>
+          </div>
+
+
+          {%endif %}
           
           <div class="settings">
             <h3 class="settings__title">Technical skills</h3>
@@ -157,7 +185,7 @@
         
          
              
-                <a class="tag tag--pill tag--sub settings__btn tag--lg" href=""><i class="im im-plus"></i> Download Resume</a>
+                <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{{seeker.cv.url}}"><i class="im im-plus"></i> Download Resume</a>
                 
             
           </div>

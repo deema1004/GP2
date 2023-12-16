@@ -1,0 +1,32 @@
+﻿Ameera
+Data scientist and Artificial intelligence engineer interested in Machine learning algorithms,DevOps and Data Management.
+	123 Your Street
+Your City, ST 12345
+(123) 456-7890
+no_reply@example.com
+	EDUCATION
+King Saud University, Bachelor of Information technology track data science and Artificial intelligence 
+
+
+
+
+PROJECTS
+Graduation Project— sikkah
+In my graduation project i developed  my leadership skills , Emotional Intelligence and Proactivity
+
+
+Natural Language Processing  -
+digital signal processing
+
+
+Artificial Intelligence  -
+Deep Learning Frameworks
+
+
+	SKILLS
+Data Visualization -Cloud Computing -Preprocessing -Feature Engineering -Model Evaluation -Docker -Kubernetes -Shell Scripting
+
+
+
+
+* * *

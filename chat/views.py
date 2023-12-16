@@ -22,5 +22,5 @@ def chat_view(request):
 		"messages": first_room_messages_qs,
 		"room_first_user": room_first_user
 	}
-	return render(request, "chat/chat.html", context)
+	return render(request, "chat/chats.html", context)
 

@@ -24,7 +24,7 @@
           
   
             <div class="hero-section__search">
-              <form class="form" method="POST" action="{% url 'SeekerHome' %}">
+              <form class="form" method="POST" action="{% url 'SeekerHome' %}" id="SearchC_form">
                 {% csrf_token %}
                 <div class="form__field" style="display: flex;">
                   
@@ -201,6 +201,16 @@
       
     </main>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('#SearchC_form').submit(function() {
+            $('#loaderIcon').css('visibility', 'visible');
+            $('#loaderIcon').show();
+        });
+    })
+</script>
   
 {% endblock content %}
 

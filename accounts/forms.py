@@ -4,6 +4,11 @@ from django.forms import ModelForm
 from .models import User, Seeker, Recruiter, Skill, Project
 
 
+class UserAccountForm(forms.Form):
+    city = forms.CharField(max_length=100, required=False)
+    month_year = forms.CharField(max_length=7, required=False)
+
+
 class SignupForm(UserCreationForm):
    
     User_Type = forms.ChoiceField(choices=[('Seeker','Seeker'),('Recruiter','Recruiter')])
@@ -25,7 +30,7 @@ class SeekerAccountForm(ModelForm):
     class Meta:
         model = Seeker
         fields = ['name', 'email', 'username', 'cv',
-                  'city', 'short_intro','bio','profile_image',
+                  'city','education', 'short_intro','bio','profile_image',
                   'social_github', 'social_linkedin', 'social_twitter',
                   'social_website']
        
@@ -43,9 +48,7 @@ class RecruiterAccountForm(ModelForm):
     class Meta:
         model = Recruiter
         fields = ['name', 'email', 'username','organization',
-                  'city', 'short_intro','bio','profile_image',
-                  'social_github', 'social_linkedin', 'social_twitter',
-                  'social_website']
+                  'city','profile_image']
        
 
     def __init__(self, *args, **kwargs):

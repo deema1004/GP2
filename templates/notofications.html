@@ -14,7 +14,7 @@
       {% for offer in SortJobOffers %}
         <tr {% if offer.is_new %}style="background-color: aliceblue;"{% endif %}>
           <td class="settings__tableInfo" style="width:80%">
-            <h4>New Offer</h4>
+            <h4>New job Proposal</h4>
             <p>from {{offer.jobpost.owner.name}} for {{offer.jobpost.postion_name}}</p>
           </td>
           <td class="settings__tableActions tdwidth" width="900">

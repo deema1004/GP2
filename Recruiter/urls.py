@@ -19,7 +19,7 @@ urlpatterns = [
     path('create-jobpost/', views.createJobPost, name="create-jobpost"),
     path('update-jobpost/<str:pk>/', views.updateJobPost, name="update-jobpost"),    
     path('delete-jobpost/<str:pk>/', views.deleteJobPost, name="delete-jobpost"), 
-
+     path('toggle-active/', views.toggle_active, name='toggle-active'),
    
     path('profile/<str:seeker_id>/<str:job_post_id>/', views.view_seeker_profile, name='view-seeker-profile'),
 

@@ -3,8 +3,8 @@ from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.contrib import messages
-from .forms import SignupForm, SeekerAccountForm, RecruiterAccountForm, AddSkillForm, projectForm
-from .models import User, Seeker, Recruiter, Skill, KnowledgeArea
+from .forms import SignupForm, SeekerAccountForm, RecruiterAccountForm, AddSkillForm, projectForm,UserAccountForm
+from .models import User, Seeker, Recruiter, Skill, KnowledgeArea, City
 from Recruiter.models import Dictionary, JobPost
 from Recruiter.models import Offers
 from Seeker.models import Applications
@@ -26,6 +26,7 @@ import re
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from operator import attrgetter
+from .models import NumberOfViews
 
 
 def userSignUp(request):
@@ -236,26 +237,139 @@ def userLogin(request):
 
 @login_required(login_url='login')
 def userAccount(request):
-
-    skills = []  
+    applications = []
+    skills = []
     account = None
     category = None
     projects = None
+    job_posts = []
+    selected_city = None
+    month_year = None
+    scores = []
+    pie_data = []
+    pie_labels = []
+    histogram_data = []
+    histogram_labels = []
+    histogram_context = {}
+    knowledge_areas_context = {}
+    job_post_max = 1000
+
+    form = UserAccountForm(request.POST or None)
+
+    knowledge_areas = KnowledgeArea.objects.all()
+    applications = Applications.objects.all()
 
     if request.user.is_Seeker:
-       account=request.user.seeker
-       skills = account.skill_set.all()
-       category = get_object_or_404(KnowledgeArea, name='Soft skills')
-       projects = account.project_set.all()
-      
+            account = request.user.seeker
+            skills = account.skill_set.all()
+            category = get_object_or_404(KnowledgeArea, name='Soft skills')
+            projects = account.project_set.all()
+            seeker = get_object_or_404(Seeker, email=request.user.email)
+            applications = Applications.objects.filter(seeker=seeker)
 
+    if request.method == 'POST' and form.is_valid() and request.user.is_Recruiter:
+
+        selected_city = form.cleaned_data.get('city')
+        month_year = form.cleaned_data.get('month_year')
+        # Get the last record (most recent) from the NumberOfViews model
+        
+        
+
+        if request.user.is_Recruiter:
+            account = request.user.recruiter
+            job_posts = JobPost.objects.all()
+
+            print("knowledge_areas: " + str(knowledge_areas))
+            print("applications: " + str(applications))
+            # for pie chart
+            for knowledge_area in knowledge_areas:
+                if month_year is not None:
+                    knowledge_areas_context[knowledge_area.name] = Applications.objects.filter(
+                        jobpost__job_category__name=knowledge_area,
+                        seeker__city__name=selected_city,
+                        month_year=month_year).count()
+                else:
+                    knowledge_areas_context[knowledge_area.name] = Applications.objects.filter(
+                        jobpost__job_category__name=knowledge_area,
+                        seeker__city__name=selected_city).count()
+
+            pie_labels = list(knowledge_areas_context.keys())
+            pie_data = list(knowledge_areas_context.values())
+
+            # for histogram chart
+            for knowledge_area in knowledge_areas:
+                if month_year is not None:
+                    histogram_context[knowledge_area.name] = JobPost.objects.filter(job_category__name=knowledge_area,
+                                                                                    city__name=selected_city,
+                                                                                    month_year=month_year).count()
+                else:
+                    histogram_context[knowledge_area.name] = JobPost.objects.filter(job_category__name=knowledge_area,
+                                                                                    city__name=selected_city).count()
+
+            print("histogram_context" + str(histogram_context))
+            histogram_labels = list(histogram_context.keys())
+            histogram_data = list(histogram_context.values())
+            job_post_max=max(histogram_context, key=lambda key: histogram_context[key])
+    else:
+        for knowledge_area in knowledge_areas:
+            category = get_object_or_404(KnowledgeArea, name='Soft skills')
+            category2 = get_object_or_404(KnowledgeArea, name='Education')
+            if knowledge_area == category or knowledge_area == category2  :
+                print(123)
+                continue  
+                print(123)
+            
+            knowledge_areas_context[knowledge_area.name] = Applications.objects.filter(
+                jobpost__job_category__name=knowledge_area).count()
+            histogram_context[knowledge_area.name] = JobPost.objects.filter(
+                job_category__name=knowledge_area).count()
+        pie_labels = list(knowledge_areas_context.keys())
+        pie_data = list(knowledge_areas_context.values())
+        histogram_labels = list(histogram_context.keys())
+        histogram_data = list(histogram_context.values())
+        job_post_max = max(histogram_context, key=lambda key: histogram_context[key])
+
+
+    all_cities = City.objects.all()
+    try:
+        last_record = NumberOfViews.objects.latest('id')
+        last_count = last_record.count
+        print("Last record is: " + str(last_record))
+        print("Last count is: " + str(last_count))
+        # Create a new record
+        new_record = NumberOfViews(count=last_record.count + 1)
+        # Save the new record to the database
+        new_record.save()
+    except NumberOfViews.DoesNotExist:
+        # Handle the case where there are no records in NumberOfViews
+        last_record = None
+        last_count = 0
+        print("Last record is: " + str(last_record))
+        print("Last count is: " + str(last_count))
+        # Create a new record
+        new_record = NumberOfViews(count=1)
+        # Save the new record to the database
+        new_record.save()
+
+    if selected_city is None:
+        selected_city = "True"
+    else:
+        applications = Applications.objects.filter(seeker__city__name=selected_city)
+
+    if month_year is None:
+        month_year = ""
     
+    if request.user.is_Recruiter:
+            account = request.user.recruiter
 
-    elif request.user.is_Recruiter:
-        account=request.user.recruiter
-
-    context = {'account': account, 'skills':skills, 'sk':category, 'projects': projects}
+    context = {'account': account, 'skills': skills, 'sk': category, 'all_cities': all_cities, 'selected_city': selected_city, 'month_year': month_year,
+               'projects': projects, 'last_record': last_record,
+               'last_count': last_count, "applications_length": len(applications),
+               'job_post_max': job_post_max, 'pie_labels': pie_labels,'pie_data': pie_data,
+               'histogram_labels': histogram_labels, 'histogram_data': histogram_data, 'scores': scores
+               }
     return render(request, 'account.html', context)
+
 
 
 

@@ -65,7 +65,8 @@ def SeekerApplication(request, jobpost_id, seeker_id):
         
     context = {
         'jobpost': jobpost,
-        'seeker_id':seeker_id
+        'seeker_id':seeker_id,
+        'exist':application_exists
     }
     return render(request, 'jobpost-seeker-view.html', context)
 
@@ -78,9 +79,9 @@ def SeekerViewJobPost(request, job_post_id, seeker_id):
 
     application_exists = Applications.objects.filter(seeker=seeker, jobpost=jobpost).exists()
     if not application_exists:
-        exist = True
-    else:
         exist = False
+    else:
+        exist = True
        
     context = {'jobpost': jobpost, 'seeker_id':seeker_id,'exist':exist } 
     return render(request, 'jobpost-seeker-view.html', context)
@@ -90,7 +91,11 @@ def calculate_similarity_scores(job_posts, seeker):
 
     similarity_scores = []
     skills = " ".join(skill.name for skill in seeker.skill_set.all())
-    seeker_embeddings = model.encode(skills)
+    if seeker.education:
+          education= seeker.education
+    else:
+            education= ""
+    seeker_embeddings = model.encode(skills+education)
 
     for job in job_posts:
             application_exists = Applications.objects.filter(seeker=seeker, jobpost=job).exists()
@@ -127,7 +132,17 @@ def SeekerHome(request):
         Jobtype = request.POST.get('Jobtype')
         city = request.POST.get('city')
         job_posts = JobPost.objects.filter(Q(job_type__name=Jobtype) & Q(city__name=city) & Q(is_active=True))
-
+        if not job_posts:
+            cities = City.objects.all()
+            city_names = cities.values_list('name', flat=True)
+            job_posts = JobPost.objects.all()
+            messages.error(request, 'No job posts found in this city, Try another city!')
+            context = {
+            'city_names': city_names,
+            'job_posts': job_posts,
+            
+            }
+            return render(request, 'SeekerHome.html', context)
         seeker=request.user.seeker
        
 
@@ -166,3 +181,35 @@ def SeekerHome(request):
 
     return render(request, 'SeekerHome.html', context)
 
+def deleteSkill(request, pk):
+    
+    account = request.user.seeker
+    skill = account.skill_set.get(name=pk,owner=account)
+    print(skill)
+    if request.method == 'POST':
+        skill.delete()
+        messages.success(request,"Skill was deleted successfully ")
+
+        return redirect('account')
+    
+    context ={'object':skill, 'skill':True}
+    return render(request,'delete-template.html',context)
+
+from django.http import JsonResponse
+from .models import Seeker
+
+def toggle_active1(request):
+    user = request.user
+    user.Active=True
+    if request.method == 'POST':
+        seeker = Seeker.objects.get(user=request.user)
+        is_active = request.POST.get('is_active')
+
+        seeker.is_active = is_active == 'true'
+        seeker.save()
+        user = request.user
+        user.Active=True
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'failure'}, status=400)
